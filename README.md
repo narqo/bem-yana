@@ -40,6 +40,8 @@ Now lets start our project:
 
 **TODO**
 
+For more usage examples, have a look at [bem-yana-stub](https://github.com/narqo/bem-yana-stub) project.
+
 ---
 
 BEM is abbreviation for Block-Element-Modifier. It's a way to write code which is easy to support and develop.
