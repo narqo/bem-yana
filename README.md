@@ -31,7 +31,7 @@ Next you should build `examples/silly` project's  with `bem make`:
 
     exports PATH=./node_modules/.bin:$PATH
 
-Now lets start our project:
+Now lets run our project:
 
     › node examples/silly/run
     Server started on port 3001
