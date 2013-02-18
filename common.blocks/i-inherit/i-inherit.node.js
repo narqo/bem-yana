@@ -1,0 +1,1 @@
+var inherit = require('inherit');
