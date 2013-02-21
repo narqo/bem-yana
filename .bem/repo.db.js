@@ -20,10 +20,6 @@ module.exports = {
         url      : 'git://github.com/bem/bem-bl.git',
         treeish  : '0.3'
     },
-    'bem-html' : {
-        type     : 'git',
-        url      : 'git://github.com/bem/bemhtml.git'
-    },
     'bem-json' : {
         type     : 'git',
         url      : 'git://github.com/delfrrr/bem-json.git'
@@ -37,9 +33,9 @@ module.exports = {
         url      : 'git://github.com/bem/bem-gen-doc.git',
         treeish  : 'make'
     },
-    'bl-controls' : {
+    'bem-controls' : {
         type     : 'git',
-        url      : 'git://github.com/bem/bl-controls.git'
+        url      : 'git://github.com/bem/bem-controls.git'
     },
     'bem-yana' : {
         type     : 'git',
