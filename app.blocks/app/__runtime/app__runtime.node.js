@@ -1,6 +1,6 @@
 App.Config.params({
 
-    handlers : [ App.StateHandler, App.BaseHandler ],
+    handlers : [ App.BaseHandler ],
 
     node : {
         port : 3001,

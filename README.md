@@ -22,14 +22,8 @@ First clone `bem-yana` project and install it's dependencies:
 
 Next you should build `examples/silly` project's  with `bem make`:
 
-    › bem make -r examples/silly
-
-**NOTE**
-
-`bem` should be in your `PATH` environment variable. You could do this by adding this line to your user's
-`.profile` config:
-
-    exports PATH=./node_modules/.bin:$PATH
+    › cd examples/silly
+    › ../../node_modules/.bin/bem make
 
 Now lets run our project:
 

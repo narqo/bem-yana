@@ -5,10 +5,8 @@ App.CommonHandler = inherit(App.Router, {
     },
 
     _normalizeRequest : function(req) {
-        var url = App.Url;
-
-        url.parse(req);
-        url.query(req);
+        App.Request.parseQS(req);
+        App.Request.parseCookies(req);
     },
 
     _handleRequest : function(req, res) {
@@ -16,7 +14,7 @@ App.CommonHandler = inherit(App.Router, {
 
         var route = this.dispatch(req);
 
-        App.Logger.log('Route dispatched %j', route);
+        App.Logger.debug('Route dispatched %j', route);
 
         if(route.action === App.Router.NOT_FOUND) {
             this.handle404.call(this, req, res, route);
@@ -33,7 +31,7 @@ App.CommonHandler = inherit(App.Router, {
     },
 
     handle404 : function(req, res, route) {
-        App.Logger.log('Not found: "%s"', route.path);
+        App.Logger.debug('Not found: "%s"', route.path);
         throw new App.HttpError(404, 'Not found.');
     },
 

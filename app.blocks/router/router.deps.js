@@ -3,6 +3,6 @@
         { block : 'app' }
     ],
     shouldDeps : [
-        { block : 'url' }
+        { block : 'request' }
     ]
 })
