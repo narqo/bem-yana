@@ -1,7 +1,13 @@
-App.Logger = inherit({}, {
+App.Logger = (function() {
 
-    log : function() {
-        console.log(App.Util.format.apply(null, arguments));
-    }
+var format = App.Util.format;
 
-});
+function log() {
+    console.log(format.apply(null, arguments));
+};
+
+return {
+    debug : log
+}
+
+}());
