@@ -1,22 +1,23 @@
 App.Http = inherit({
 
-    __constructor : function() {
+    __constructor : function(params) {
         this._stack = [];
 
-        this._params = this._getDefaultParams();
+        this._params = App.Util.merge(this._getDefaultParams() || params);
 
         this
             ._loadMiddlewares()
             ._createServer();
     },
 
-    start : function(port) {
-        App.Logger.log('Server started on port %d', port);
+    run : function(port) {
+        App.Logger.debug('Server started on %d', port);
         this._server.listen(port);
     },
 
     stop : function() {
-        // TODO?
+        App.Logger.debug('Server was stoped');
+        this._server.close();
     },
 
     _stack : [],
@@ -27,14 +28,14 @@ App.Http = inherit({
     },
 
     _onRequest : function(req, res) {
-        App.Logger.log('\nRequest for "%s" received', req.url);
+        App.Logger.debug('\nRequest for "%s" received', req.url);
 
         var stack = this._stack,
             resp = [];
 
         for(var i = 0; i < stack.length; i++) {
             if(res.finished) {
-                App.Logger.log('Response was finished before all the handlers processed!');
+                App.Logger.debug('Response was finished before all the handlers processed!');
                 // FIXME: do something usefull?
                 return;
             }
@@ -53,7 +54,7 @@ App.Http = inherit({
     },
 
     _onError : function(req, res, err) {
-        App.Logger.log('Error catched', err);
+        App.Logger.debug('Error catched', err);
 
         var code = err.code || 500;
 
@@ -62,7 +63,7 @@ App.Http = inherit({
     },
 
     _onStackEnd : function(req, res) {
-        App.Logger.log('All request handlers are passed');
+        App.Logger.debug('All request handlers are passed');
     },
 
     _createServer : function() {
