@@ -9,8 +9,11 @@ App.Config = inherit({}, {
     },
 
     params : function(params) {
-        // FIXME: ugly
         var env = this.__env;
+
+        if(typeof params === 'undefined')
+            return env;
+
         return this.__env = App.Util.merge(env, params);
     },
 
