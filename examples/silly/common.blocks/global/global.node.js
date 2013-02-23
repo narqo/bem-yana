@@ -11,6 +11,20 @@ function main() {
 
     });
 
-    (new App.Http())
-        .start(App.Config.param('node').port);
+    // TODO: method, params
+    /*
+    <handler>
+        .addRoute({
+            rule   : '/objects/{id}',
+            action : 'objects',
+            method : 'get',
+            params : {
+                'new' : true,
+                'type' : ['one', 'two']
+            }
+        });
+    */
+
+    var app = new App.Http();
+    app.run(App.Config.param('node').port);
 };
