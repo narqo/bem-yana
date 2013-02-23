@@ -15,7 +15,7 @@ App.Router = inherit({
             max = routes.length,
             p = 0;
 
-        App.Logger.log('Going to route "%s"', url);
+        App.Logger.debug('Going to route "%s"', url);
 
         for(p = 0; p < max; p++) {
             var route = routes[p],
@@ -31,7 +31,7 @@ App.Router = inherit({
             }
         }
 
-        App.Logger.log('¡ No resource found for "%s" !', url);
+        App.Logger.debug('¡ No resource found for "%s" !', url);
         return {
             action : this.__self.NOT_FOUND,
             path : url,
@@ -40,7 +40,7 @@ App.Router = inherit({
     },
 
     dispatch : function(req) {
-        var url = App.Url.parse(req),
+        var url = App.Request.parseUrl(req),
             resource = this.resolve(url.pathname);
 
         return resource;
