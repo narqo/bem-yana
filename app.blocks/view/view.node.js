@@ -64,7 +64,7 @@ var View = inherit({
         return this._name;
     },
 
-    decl : function(decl, props) {
+    decl : function(decl, props, staticProps) {
         typeof decl === 'string' && (decl = { block : decl });
 
         if(decl.base && !views[decl.base]) {
@@ -74,7 +74,7 @@ var View = inherit({
 
         var base = views[decl.base || decl.block] || this;
 
-        (views[decl.block] = inherit(base, props))._name = decl.block;
+        (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
     },
 
     create : function(name, req, res, path, params) {
