@@ -20,7 +20,7 @@ App.CommonHandler = inherit(App.Router, {
     },
 
     handleRequest : function(req, res, route) {
-        this.__self._getViewClass()
+        return this.__self._getViewClass()
             .create(route.action, req, res, route.path, route.params)
             ._run();
     },
