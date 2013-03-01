@@ -4,6 +4,7 @@
         { block : 'http' }
     ],
     shouldDeps : [
-        { block : 'page' }
+        { block : 'page' },
+        { block : 'view', elem : 'static' }
     ]
 })

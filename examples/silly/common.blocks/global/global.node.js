@@ -1,14 +1,26 @@
 exports.main = main;
 
 function main() {
-    App.Config.params({
+    var config = App.Config;
+
+    config.params({
 
         routes : [
-            { rule : '/', action : 'page' },
+            { rule : '/$', action : 'page' },
             { rule : '/albums', action : 'page' },
             { rule : '/albums/{id}', action : 'page' },
+            { rule : '/m', action : 'static' },
+            { rule : '/.*\.js$', action : 'static' },
+            { rule : '/favicon.ico', action : 'static' }
         ]
 
+    });
+
+    config.param('DEBUG', true);
+
+    config.params({
+        STATIC_ROOT : require('path').resolve(__dirname),
+        STATIC_URL  : ''
     });
 
     // TODO: method, params
