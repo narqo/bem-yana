@@ -4,13 +4,8 @@ App.CommonHandler = inherit(App.Router, {
         return this._handleRequest.bind(this);
     },
 
-    _normalizeRequest : function(req) {
-        App.Request.parseQS(req);
-        App.Request.parseCookies(req);
-    },
-
     _handleRequest : function(req, res) {
-        this._normalizeRequest(req);
+        req = new App.Request(req);
 
         var route = this.dispatch(req);
 
