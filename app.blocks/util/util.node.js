@@ -20,6 +20,8 @@ var util = require('util'),
 
 return AppUtil.merge(util, AppUtil, {
 
+    noop : function() {},
+
     unique : function(arr) {
         var res = [],
             i = arr.length;
