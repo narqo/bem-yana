@@ -11,7 +11,7 @@ App.View.decl('static', {
         this._root = config.param('STATIC_ROOT');
         this._pathUrl = config.param('STATIC_URL');
 
-        this._pathUrlRe = new RegExp('^' + this._pathUrl + '/');
+        this._pathUrlRe = new RegExp('^' + this._pathUrl);
 
         this._server = new fileServer(this._root, { cache : false });
     },

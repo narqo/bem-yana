@@ -20,6 +20,6 @@ App.Config.params({
     /**
      * @type String
      */
-    STATIC_URL : '/static'
+    STATIC_URL : '/static/'
 
 });

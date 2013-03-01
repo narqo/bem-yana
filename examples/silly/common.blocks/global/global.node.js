@@ -20,7 +20,7 @@ function main() {
 
     config.params({
         STATIC_ROOT : require('path').resolve(__dirname),
-        STATIC_URL  : ''
+        STATIC_URL  : '/m/'
     });
 
     // TODO: method, params
