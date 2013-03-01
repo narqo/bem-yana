@@ -11,10 +11,10 @@ App.Http = inherit({
     },
 
     run : function(port) {
-        port || (port = App.Config.param('node').port);
+        port || (port = App.Config.param('NODE').port);
 
         this._server.listen(port, function() {
-            App.Logger.debug('Server started on %d', port);
+            App.Logger.info('Server started on %d', port);
         });
     },
 
@@ -85,7 +85,7 @@ App.Http = inherit({
     // TOOD
     _getDefaultParams : function() {
         return {
-            'handlers' : App.Config.param('handlers')
+            'handlers' : App.Config.param('REQUEST_HANDLERS')
         };
     }
 
