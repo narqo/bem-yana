@@ -13,6 +13,7 @@ var View = inherit({
 
     render : function(ctx) {
         App.Logger.debug('Rendering request');
+
         return Vow.fulfill(1);
     },
 
@@ -23,7 +24,7 @@ var View = inherit({
     _createContext : function() {},
 
     _run : function() {
-        App.Logger.debug('Ω Page for action: "%s", path: "%s" running.',
+        App.Logger.debug('Page for action: "%s", path: "%s" running.',
                 this._getName(), this._path);
 
         var ctx = this._createContext();
@@ -34,7 +35,7 @@ var View = inherit({
     },
 
     _onCompleted : function(result) {
-        App.Logger.debug('Ω Request for action "%s" proccesed.', this._getName());
+        App.Logger.debug('Request for action "%s" proccesed.', this._getName());
 
         var resultType = typeof result;
 
@@ -48,7 +49,7 @@ var View = inherit({
     },
 
     _onFailed : function(e) {
-        App.Logger.debug('Ω Request for action "%s" failed with "%s".',
+        App.Logger.debug('Request for action "%s" failed with "%s".',
                 this._getName(), e.message);
 
         throw new App.HttpError(500, e);

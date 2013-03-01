@@ -31,7 +31,7 @@ App.Router = inherit({
             }
         }
 
-        App.Logger.debug('¡ No resource found for "%s" !', url);
+        App.Logger.debug('No resource found for "%s"', url);
         return {
             action : this.__self.NOT_FOUND,
             path : url,

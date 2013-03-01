@@ -26,5 +26,5 @@ function main() {
     */
 
     var app = new App.Http();
-    app.run(App.Config.param('node').port);
+    app.run();
 };

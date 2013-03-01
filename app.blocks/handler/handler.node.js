@@ -31,7 +31,7 @@ App.CommonHandler = inherit(App.Router, {
     },
 
     handle404 : function(req, res, route) {
-        App.Logger.debug('Not found: "%s"', route.path);
+        App.Logger.debug('Not found: "%s"', req.pathname);
         throw new App.HttpError(404, 'Not found.');
     },
 
