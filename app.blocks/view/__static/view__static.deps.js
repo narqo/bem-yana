@@ -5,6 +5,6 @@
     ],
     shouldDeps : [
         { block : 'logger' },
-        { block : 'error', mods : { type : ['http', 'view'] } }
+        { block : 'config' }
     ]
 })

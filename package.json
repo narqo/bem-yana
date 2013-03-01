@@ -1,7 +1,7 @@
 {
   "name": "bem-yana",
   "description": "Yet Another Node Application done BEM",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": {
     "type": "git",
     "url": "git://github.com/narqo/bem-yana.git"
@@ -12,7 +12,8 @@
   "dependencies": {
     "vow": "~0.1.8",
     "inherit": "~1.0.4",
-    "cookies": "~0.3.6"
+    "cookies": "~0.3.6",
+    "node-static": "~0.6.7"
   },
   "devDependencies": {
     "bem": "~0.5.23",

@@ -1,13 +1,15 @@
 App.Logger = (function() {
 
-var format = App.Util.format;
+var util = App.Util,
+    config = App.Config;
 
 function log() {
-    console.log(format.apply(null, arguments));
+    console.log(util.format.apply(null, arguments));
 };
 
 return {
-    debug : log
+    debug : function() { config.param('DEBUG') && log.apply(null, arguments) },
+    info  : log
 }
 
 }());

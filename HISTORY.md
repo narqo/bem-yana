@@ -1,4 +1,11 @@
 
+0.1.4, 2013-03-01
+-----------------
+
+  - static view added (#1)
+  - App.Request.parseQS() was renamed to App.Request.parseArgs() (#2)
+  - code refactoring
+
 0.1.3, 2013-02-24
 -----------------
 
