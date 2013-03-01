@@ -11,7 +11,7 @@ App.View.decl('page', {
      * @returns {String|Buffer}
      */
     render : function(ctx) {
-        App.Logger.debug('å page handler is runnig');
+        App.Logger.debug('Page handler is runnig');
 
         var req = ctx.request;
 
