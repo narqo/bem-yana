@@ -12,15 +12,12 @@ App.Router = inherit({
         url = this.__self._normalizeUrl(url);
 
         var routes = this._routes,
-            max = routes.length,
-            p = 0;
+            max = routes.length - 1,
+            m;
 
         App.Logger.debug('Going to route "%s"', url);
 
-        for(p = 0; p < max; p++) {
-            var route = routes[p],
-                m;
-
+        while(route = routes[max--]) {
             if(m = url.match(route.regexp)) {
                 var params = m.splice(1);
                 return {
@@ -75,7 +72,7 @@ App.Router = inherit({
             path = rule.replace(/(\{.+?\})/g, function(match, token) {
                 return STOPS.COMMON;
             });
-        return new RegExp('^' + path + '$');
+        return new RegExp('^' + path + '');
     },
 
     _getRouteAction : function(name) {
