@@ -83,10 +83,9 @@ Yana.Http = inherit({
             (this._server = this.__self._http.createServer(this._onRequest.bind(this)));
     },
 
-    // TOOD
     _getDefaultParams : function() {
         return {
-            'handlers' : Yana.Config.param('REQUEST_HANDLERS')
+            'handlers' : [ Yana.BaseHandler ]
         };
     }
 

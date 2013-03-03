@@ -2,7 +2,7 @@ Yana.Config.params({
 
     DEBUG : false,
 
-    REQUEST_HANDLERS : [ Yana.BaseHandler ],
+    REQUEST_HANDLERS : [  ],
 
     NODE : {
         port : 3001,

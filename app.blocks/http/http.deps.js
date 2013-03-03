@@ -1,11 +1,15 @@
 ({
     mustDeps : [
-        { block : 'yana' },
-        { block : 'app' },
-        { block : 'config' },
+        { block : 'yana' }
     ],
     shouldDeps : [
+        { block : 'config' },
+        {
+            block : 'handler',
+            mods : { 'type' : 'base' }
+        },
         { block : 'error' },
-        { block : 'logger' }
+        { block : 'logger' },
+        { block : 'yana', elem : 'default' }
     ]
 })
