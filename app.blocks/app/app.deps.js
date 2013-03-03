@@ -1,5 +1,9 @@
 ({
     mustDeps : [
-        { block : 'i-inherit' }
+        { block : 'yana' },
+        { block : 'config' },
+        { block : 'handler', mods : { 'type' : 'base' } }
+    ],
+    shouldDeps : [
     ]
 })

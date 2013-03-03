@@ -1,4 +1,4 @@
-App.Router = inherit({
+Yana.Router = inherit({
 
     __constructor : function(routes) {
         this._routes = this.__self._parse(routes);
@@ -15,7 +15,7 @@ App.Router = inherit({
             max = routes.length - 1,
             m;
 
-        App.Logger.debug('Going to route "%s"', url);
+        Yana.Logger.debug('Going to route "%s"', url);
 
         while(route = routes[max--]) {
             if(m = url.match(route.regexp)) {
@@ -28,7 +28,7 @@ App.Router = inherit({
             }
         }
 
-        App.Logger.debug('No resource found for "%s"', url);
+        Yana.Logger.debug('No resource found for "%s"', url);
         return {
             action : this.__self.NOT_FOUND,
             path : url,
@@ -37,7 +37,7 @@ App.Router = inherit({
     },
 
     dispatch : function(req) {
-        var url = App.Request.parseUrl(req),
+        var url = Yana.Request.parseUrl(req),
             resource = this.resolve(url.pathname);
 
         return resource;
@@ -51,7 +51,7 @@ App.Router = inherit({
 
 }, {
 
-    NOT_FOUND : 'not-found',
+    NOT_FOUND : 'error404',
 
     STOPS : {
         COMMON : '([^/]+)'

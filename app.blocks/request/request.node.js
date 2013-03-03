@@ -1,4 +1,4 @@
-App.Request = (function() {
+Yana.Request = (function() {
 
 var url = require('url'),
     qs = require('querystring'),

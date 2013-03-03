@@ -1,7 +1,7 @@
-App.ViewError = inherit(App.Error, {
+Yana.ViewError = inherit(Yana.Error, {
 
     toString : function() {
-        return 'ViewError: ' + this.message;
+        return 'ViewError ' + this.message;
     }
 
 });
