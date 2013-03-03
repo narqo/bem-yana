@@ -1,7 +1,7 @@
 exports.main = main;
 
 function main() {
-    var config = App.Config;
+    var config = Yana.Config;
 
     config.params({
 
@@ -37,6 +37,6 @@ function main() {
         });
     */
 
-    var app = new App.Http();
+    var app = new Yana.Http();
     app.run();
 };
