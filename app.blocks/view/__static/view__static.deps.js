@@ -1,6 +1,6 @@
 ({
     mustDeps : [
-        { block : 'i-promise' },
+        { block : 'promise' },
         { block : 'yana' }
     ],
     shouldDeps : [

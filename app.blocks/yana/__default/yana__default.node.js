@@ -2,20 +2,21 @@ Yana.Config.params({
 
     DEBUG : false,
 
-    REQUEST_HANDLERS : [  ],
-
     NODE : {
         port : 3001,
         socket : 'node.socket'
     },
+
     /**
      * @type String
      */
     APP_ROOT : '',
+
     /**
      * @type String
      */
     STATIC_ROOT : '',
+
     /**
      * @type String
      */

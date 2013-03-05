@@ -39,17 +39,25 @@ Yana.Http = inherit({
             result;
 
         for(var i = 0; i < stack.length; i++) {
-            if(res.finished) {
-                Yana.Logger.debug('Response was finished before all the handlers processed!');
-                // FIXME: do something usefull?
-                return;
-            }
-
             try {
                 handler = (new stack[i]()).run();
-                result = handler(req, res);
 
-                Vow.isPromise(result) && hResultsP.push(result);
+                (function(req, res, handler) {
+
+                    result = Vow.when(result || true, function() {
+                        if(res.finished) {
+                            Yana.Logger.debug('Response was finished before all the handlers processed!');
+                            // FIXME: do something usefull?
+                            return;
+                        }
+
+                        return handler(req, res);
+                    });
+
+                    hResultsP.push(result);
+
+                }).call(this, req, res, handler);
+
             } catch(e) {
                 this._onError(req, res, e);
                 return;
@@ -85,7 +93,7 @@ Yana.Http = inherit({
 
     _getDefaultParams : function() {
         return {
-            'handlers' : [ Yana.BaseHandler ]
+            'handlers' : [ Yana.CommonHandler ]
         };
     }
 

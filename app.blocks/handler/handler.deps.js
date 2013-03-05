@@ -1,12 +1,11 @@
 ({
     mustDeps : [
-        { block : 'yana' },
-        { block : 'router' }
+        { block : 'yana' }
     ],
     shouldDeps : [
+        { block : 'logger' },
+        { block : 'error' },
         { block : 'util' },
-        { block : 'request' },
-        { block : 'view' },
-        { block : 'view', elem : 'error', mods : { type : ['404', '500'] } },
+        { block : 'request' }
     ]
 })

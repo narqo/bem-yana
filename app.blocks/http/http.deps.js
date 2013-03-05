@@ -1,12 +1,13 @@
 ({
     mustDeps : [
+        { block : 'promise' },
         { block : 'yana' }
     ],
     shouldDeps : [
         { block : 'config' },
         {
             block : 'handler',
-            mods : { 'type' : 'base' }
+            mods : { 'type' : 'common' }
         },
         { block : 'error' },
         { block : 'logger' },

@@ -1,6 +1,6 @@
 ({
     mustDeps : [
-        { block : 'i-inherit' }
+        { block : 'inherit' }
     ],
     shouldDeps : [
     ]
