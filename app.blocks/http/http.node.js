@@ -3,7 +3,7 @@ Yana.Http = inherit({
     __constructor : function(params) {
         this._handlers = [];
 
-        this._params = Yana.Util.merge(this._getDefaultParams() || params);
+        this._params = Yana.Util.merge(this._getDefaultParams(), params);
 
         this
             ._loadHandlers()
