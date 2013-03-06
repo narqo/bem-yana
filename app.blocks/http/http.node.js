@@ -35,8 +35,8 @@ Yana.Http = inherit({
 
         var stack = this._handlers,
             hResultsP = [],
-            handler,
-            result;
+            result,
+            handler;
 
         for(var i = 0; i < stack.length; i++) {
             try {
@@ -63,11 +63,11 @@ Yana.Http = inherit({
                 return;
             }
 
-            hResultsP.length &&
-                Vow.all(hResultsP).then(
-                        this._onStackEnd.bind(this, req, res),
-                        this._onError.bind(this, req, res));
         }
+
+        Vow.all(hResultsP).then(
+            this._onStackEnd.bind(this, req, res),
+            this._onError.bind(this, req, res));
     },
 
     _onError : function(req, res, err) {
