@@ -8,7 +8,7 @@ var View = inherit({
         this._req = req;
         this._res = res;
         this._path = path;
-        this._params = params;
+        this._params = Yana.Util.merge(this._getDefaultParams(), params);
     },
 
     render : function(ctx) {
@@ -53,6 +53,10 @@ var View = inherit({
                 this._getName(), e.message);
 
         throw new Yana.HttpError(500, e);
+    },
+
+    _getDefaultParams : function() {
+        return {};
     }
 
 }, {
