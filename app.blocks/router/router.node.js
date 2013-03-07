@@ -1,6 +1,7 @@
 Yana.Router = inherit({
 
     __constructor : function(routes) {
+        this._rules = routes;
         this._routes = this.__self._parse(routes);
     },
 
@@ -18,8 +19,15 @@ Yana.Router = inherit({
         Yana.Logger.debug('Going to route "%s"', url);
 
         while(route = routes[max--]) {
-            if(m = url.match(route.regexp)) {
-                var params = m.splice(1);
+            if(m = route.regexp.exec(url)) {
+                var params = {},
+                    keys = route.keys,
+                    len = keys.length;
+
+                for(var i = 0; i < len; i++) {
+                    params[ keys[i] ] = m[i+1];
+                }
+
                 return {
                     action : route.action,
                     path : url,
@@ -32,7 +40,7 @@ Yana.Router = inherit({
         return {
             action : this.__self.NOT_FOUND,
             path : url,
-            params : []
+            params : {}
         };
     },
 
@@ -54,7 +62,7 @@ Yana.Router = inherit({
     NOT_FOUND : 'error404',
 
     STOPS : {
-        COMMON : '([^/]+)'
+        COMMON : '[^/]+'
     },
 
     _parse : function(routes) {
@@ -62,17 +70,34 @@ Yana.Router = inherit({
     },
 
     _parseRoute : function(route) {
-        route.regexp = this._compile(route.rule);
+        var compiled = this._compile(route.rule);
+
+        route.regexp = compiled.regexp;
+        route.keys = compiled.keys;
         route.action = this._getRouteAction(route.action);
+
         return route;
     },
 
     _compile : function(rule) {
         var STOPS = this.STOPS,
-            path = rule.replace(/(\{.+?\})/g, function(match, token) {
-                return STOPS.COMMON;
+            keys = [],
+            path = rule.replace(/\{(.+?)\}/g, function(match, token) {
+                var parts = token.split(':'),
+                    typ = parts[1] || STOPS.COMMON
+
+                keys.push(parts[0]);
+
+                return '(' + typ + ')';
             });
-        return new RegExp('^' + path + '');
+
+        path = '^' + path;
+        ~path.indexOf('$') || (path += '$');
+
+        return {
+            regexp : new RegExp(path),
+            keys : keys
+        };
     },
 
     _getRouteAction : function(name) {
