@@ -1,8 +1,6 @@
 ({
     mustDeps : [
-        { block : 'yana' }
-    ],
-    shouldDeps : [
+        { block : 'yana' },
         { block : 'logger' }
     ]
 })
