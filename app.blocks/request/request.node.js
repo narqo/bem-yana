@@ -1,28 +1,30 @@
 Yana.Request = (function() {
 
-var url = require('url'),
+var http = require('http'),
+    url = require('url'),
     qs = require('querystring'),
     cookies = require('cookies');
 
-return inherit({
+return inherit(http.IncomingMessage, {
 
     __constructor : function(req) {
-        return this._normalize(req);
+        req.__proto__ = this;
+
+        req._normalize();
+        return req;
     },
 
-    _normalize : function(req) {
-        if(req._normalized)
-            return req;
+    _normalize : function() {
+        if(this._normalized)
+            return this;
 
         var _self = this.__self;
 
-        _self.parseUrl(req);
-        _self.parseArgs(req);
-        _self.parseCookies(req);
+        _self.parseUrl(this);
+        _self.parseArgs(this);
+        _self.parseCookies(this);
 
-        req._normalized = true;
-
-        return req;
+        this._normalized = true;
     }
 
 }, {
