@@ -14,6 +14,7 @@ Yana.Router = inherit({
 
         var routes = this._routes,
             max = routes.length - 1,
+            route,
             m;
 
         Yana.Logger.debug('Going to route "%s"', url);
@@ -84,7 +85,7 @@ Yana.Router = inherit({
             keys = [],
             path = rule.replace(/\{(.+?)\}/g, function(match, token) {
                 var parts = token.split(':'),
-                    typ = parts[1] || STOPS.COMMON
+                    typ = parts[1] || STOPS.COMMON;
 
                 keys.push(parts[0]);
 
