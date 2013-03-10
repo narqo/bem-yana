@@ -6,6 +6,7 @@
         { block : 'logger' },
         { block : 'error' },
         { block : 'util' },
-        { block : 'request' }
+        { block : 'request' },
+        { block : 'response' }
     ]
 })
