@@ -4,7 +4,8 @@ Yana.Config.params({
 
     NODE : {
         port : 3001,
-        socket : 'node.socket'
+        socket : 'node.socket',
+        workers : 1
     },
 
     /**
