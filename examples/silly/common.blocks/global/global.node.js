@@ -1,5 +1,7 @@
 exports.config = Yana.Config;
 exports.init = init;
+exports.main = main;
+
 
 function init() {
     var config = Yana.Config;
@@ -40,3 +42,13 @@ function init() {
     var app = new Yana.Http();
     return app;
 };
+
+function main() {
+    Yana.Config.param('NODE').workers = require('os').cpus().length;
+
+    var cluster = new Yana.Cluster(),
+        app = init(),
+        worker = app.run.bind(app);
+
+    cluster.run(worker);
+}

@@ -1,24 +1,3 @@
 #!/usr/bin/env node
 
-var cluster = require('cluster'),
-    app = require('./silly.bundles/index/_index.node.js'),
-    nworkers = app.config.WORKERS || require('os').cpus().length,
-    server = app.init(),
-
-    workers = [];
-
-if(cluster.isMaster) {
-    var i = 0;
-    do {
-        var worker = cluster.fork();
-        workers.push(worker);
-        console.log('Starting Work (PID):', worker.process.pid);
-    } while(i++ < nworkers)
-
-    cluster.on('exit', function(worker, code, signal) {
-        if(!worker.suicide)
-            cluster.fork();
-    });
-} else {
-    server.run();
-}
+require('./silly.bundles/index/_index.node.js').main();
