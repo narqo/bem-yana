@@ -1,12 +1,13 @@
-exports.main = main;
+exports.config = Yana.Config;
+exports.init = init;
 
-function main() {
+function init() {
     var config = Yana.Config;
 
     config.params({
 
         routes : [
-            { rule : '/$', action : 'page' },
+            { rule : '/', action : 'page' },
             { rule : '/albums', action : 'page' },
             { rule : '/albums/{id}', action : 'page' },
             { rule : '/m', action : 'static' },
@@ -16,9 +17,8 @@ function main() {
 
     });
 
-    config.param('DEBUG', true);
-
     config.params({
+        DEBUG : true,
         STATIC_ROOT : require('path').resolve(__dirname),
         STATIC_URL  : '/m/'
     });
@@ -38,5 +38,5 @@ function main() {
     */
 
     var app = new Yana.Http();
-    app.run();
+    return app;
 };
