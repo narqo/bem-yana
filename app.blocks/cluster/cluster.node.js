@@ -1,5 +1,7 @@
 (function() {
 
+var workers = {};
+
 Yana.Cluster = inherit({
 
     __constructor : function(params) {
@@ -11,9 +13,17 @@ Yana.Cluster = inherit({
             this._init() : worker();
     },
 
+    stop : function() {
+        var wrks = this.__self._cluster.workers;
+        wrks.forEach(function(worker) {
+            worker.destroy();
+        });
+    },
+
     _init : function() {
         var nworkers = this._params.workers,
-            cluster = this.__self._cluster;
+            cluster = this.__self._cluster,
+            timeouts = {};
 
         Yana.Logger.debug('Going to start %d Workers', nworkers);
 
@@ -24,12 +34,37 @@ Yana.Cluster = inherit({
             Yana.Logger.info('Starting Worker (PID): %d', pid);
         }
 
-        cluster.on('exit', function(worker, code, signal) {
-            if(!worker.suicide) {
-                Yana.Logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
-                cluster.fork();
-            }
-        });
+        cluster
+            .on('fork', this._onWorkerFork.bind(this))
+            .on('listening', this._onWorkerListening.bind(this))
+            .on('exit', this._onWorkerExit.bind.bind(this));
+
+        // NOTE: make cluster and supervisor play nicely together
+        // see https://github.com/isaacs/node-supervisor/issues/40 for details
+        if(process.env.NODE_HOT_RELOAD === 1) {
+            ['SIGINT', 'SIGTERM', 'SIGQUIT'].forEach(function(signal) {
+                process.on(signal, this.stop);
+            }, this);
+        }
+    },
+
+    _onWorkerFork : function(worker) {
+        workers[worker.id] = setTimeout(function() {
+            Yana.Config.debug('Worker taking too long to start');
+        }, this._params.timeout);
+    },
+
+    _onWorkerListening : function(worker) {
+        clearTimeout(workers[worker.id]);
+    },
+
+    _onWorkerExit : function(worker) {
+        clearTimeout(timeouts[worker.id]);
+
+        if(!worker.suicide) {
+            Yana.Logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
+            this.__self._cluster.fork();
+        }
     },
 
     _getWorkerPid : function(worker) {
@@ -38,7 +73,8 @@ Yana.Cluster = inherit({
 
     _getDefaultParams : function() {
         return {
-            workers : Yana.Config.param('NODE').workers
+            workers : Yana.Config.param('NODE').workers,
+            timeout : 2000
         };
     }
 
