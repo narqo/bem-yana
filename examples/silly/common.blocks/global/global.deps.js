@@ -1,7 +1,8 @@
 ({
     mustDeps : [
         { block : 'config' },
-        { block : 'http' }
+        { block : 'http' },
+        { block : 'cluster' }
     ],
     shouldDeps : [
         { block : 'page' },
