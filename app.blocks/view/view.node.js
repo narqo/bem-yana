@@ -30,8 +30,7 @@ var View = inherit({
         var ctx = this._createContext();
 
         return Vow.when(this.render.call(this, ctx))
-            .then(this._onCompleted.bind(this), this._onFailed.bind(this))
-            .done();
+            .then(this._onCompleted.bind(this), this._onFailed.bind(this));
     },
 
     _onCompleted : function(result) {
