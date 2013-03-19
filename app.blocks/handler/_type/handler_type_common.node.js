@@ -6,19 +6,6 @@ Yana.CommonHandler = inherit(Yana.Handler, {
         this._router = new (this.__self._getRoutingClass())(this._params.routes);
     },
 
-    run : function() {
-        return this._wrap.call(this, this.__base());
-    },
-
-    _wrap : function(handler) {
-        var _t = this;
-        return function(req, res) {
-            return handler.call(_t,
-                    new (_t.__self._getRequestClass())(req),
-                    new (_t.__self._getResponceClass())(res));
-        };
-    },
-
     _handleRequest : function(req, res) {
         var route = this._router.dispatch(req);
 
@@ -40,14 +27,6 @@ Yana.CommonHandler = inherit(Yana.Handler, {
     }
 
 }, {
-
-    _getRequestClass : function() {
-        return Yana.Request;
-    },
-
-    _getResponceClass : function() {
-        return Yana.Response;
-    },
 
     _getRoutingClass : function() {
         return Yana.Router;
