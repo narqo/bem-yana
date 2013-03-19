@@ -35,7 +35,7 @@ Yana.Http = inherit({
 
         var proc,
             hResultsP = this._handlers.reduce(function(val, handler) {
-                proc = (new handler).run();
+                proc = (new handler)._run();
                 // FIXME: Обработчик POST-запроса срабатывает только на первый tick,
                 // поэтому первый handler нельзя завернуть в promise (node<=0.8)
                 return val === null?
