@@ -33,39 +33,25 @@ Yana.Http = inherit({
     _onRequest : function(req, res) {
         Yana.Logger.debug('\nRequest for "%s" received', req.url);
 
-        var stack = this._handlers,
-            hResultsP = [],
-            result,
-            handler;
+        var proc,
+            hResultsP = this._handlers.reduce(function(val, handler) {
+                proc = (new handler).run();
+                // FIXME: Обработчик POST-запроса срабатывает только на первый tick,
+                // поэтому первый handler нельзя завернуть в promise (node<=0.8)
+                return val === null?
+                        proc(req, res) :
+                        Vow.when(val, function(result) {
+                            if(res.finished) {
+                                Yana.Logger.debug('Response was finished before all the handlers processed!');
+                                // FIXME: do something usefull?
+                                return;
+                            }
 
-        for(var i = 0; i < stack.length; i++) {
-            try {
-                handler = (new stack[i]()).run();
+                            return proc(req, res);
+                        });
+        }, null);
 
-                (function(req, res, handler) {
-
-                    result = Vow.when(result || true, function() {
-                        if(res.finished) {
-                            Yana.Logger.debug('Response was finished before all the handlers processed!');
-                            // FIXME: do something usefull?
-                            return;
-                        }
-
-                        return handler(req, res);
-                    });
-
-                    hResultsP.push(result);
-
-                }).call(this, req, res, handler);
-
-            } catch(e) {
-                this._onError(req, res, e);
-                return;
-            }
-
-        }
-
-        Vow.all(hResultsP).then(
+        hResultsP.then(
             this._onStackEnd.bind(this, req, res),
             this._onError.bind(this, req, res));
     },
