@@ -53,6 +53,42 @@ return inherit(http.IncomingMessage, {
     parseMime : function(req) {
         var ct = req.headers['content-type'] || '';
         return ct.split(';')[0];
+    },
+
+    hasBody : function(req) {
+        return req.headers.hasOwnProperty('transfer-encoding') ||
+            req.headers.hasOwnProperty('content-length');
+    },
+
+    parseBody : function(req) {
+        var promise = Vow.promise(),
+            body = {};
+
+        if(req.method === 'POST' && this.hasBody(req)) {
+            var buf = '';
+
+            req.setEncoding('utf8');
+
+            req
+                .on('data', function(chunk) {
+                    buf += chunk;
+                })
+                .once('end', function() {
+                    try {
+                        body = buf.length? qs.parse(buf) : {};
+                        promise.fulfill(body);
+                    } catch(e) {
+                        promise.reject(e);
+                    }
+                })
+                .once('close', function() {
+                    promise.reject(new Yana.HttpError(500, 'connection closed'));
+                });
+        } else {
+            promise.fulfill(body);
+        }
+
+        return promise;
     }
 
 });
