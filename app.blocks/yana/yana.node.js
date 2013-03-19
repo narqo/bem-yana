@@ -1,1 +1,1 @@
-var Yana = {};
+var Yana = exports.Yana = {};
