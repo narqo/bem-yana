@@ -7,25 +7,50 @@ var http = require('http'),
 
 return inherit(http.IncomingMessage, {
 
+    /**
+     * @constructor
+     * @returns {Promise * Yana.Request}
+     */
     __constructor : function(req) {
         req.__proto__ = this;
 
-        req._normalize();
-        return req;
+        return req._normalize();
     },
 
     _normalize : function() {
         if(this._normalized)
-            return this;
+            return Vow.promise(this);
 
         var _self = this.__self;
 
-        _self.parseUrl(this);
-        _self.parseArgs(this);
-        _self.parseCookies(this);
+        return _self.parseBody(this)
+            .then(function(data) {
 
-        this._normalized = true;
-    }
+                this._bodyParser = dataParser(_self.parseDataType(this));
+                this._rawBody = data;
+
+                Object.defineProperty(this, 'body', {
+                    'get' : function() {
+                        if(this._body)
+                            return this._body;
+
+                        return this._body = this._bodyParser(this._rawBody);
+                    },
+
+                    'set' : function(val) {
+                        return this._rawBody;
+                    }
+                });
+
+                _self.parseUrl(this);
+                _self.parseArgs(this);
+                _self.parseCookies(this);
+
+                this._normalized = true;
+
+                return this;
+            }.bind(this));
+    },
 
 }, {
 
@@ -55,9 +80,11 @@ return inherit(http.IncomingMessage, {
         return ct.split(';')[0];
     },
 
-    hasBody : function(req) {
-        return req.headers.hasOwnProperty('transfer-encoding') ||
-            req.headers.hasOwnProperty('content-length');
+    parseDataType : function(req) {
+        var mime = this.parseMime(req);
+        if('application/json' === mime)
+            return 'json';
+        return 'text';
     },
 
     parseBody : function(req) {
@@ -75,10 +102,10 @@ return inherit(http.IncomingMessage, {
                 })
                 .once('end', function() {
                     try {
-                        body = buf.length? qs.parse(buf) : {};
-                        promise.fulfill(body);
+                        buf.length || (buf = {});
+                        promise.fulfill(buf);
                     } catch(e) {
-                        promise.reject(e);
+                        promise.reject(new Yana.HttpError(400, e.message));
                     }
                 })
                 .once('close', function() {
@@ -89,8 +116,31 @@ return inherit(http.IncomingMessage, {
         }
 
         return promise;
+    },
+
+    hasBody : function(req) {
+        return req.method === 'PUT' ||
+            req.headers.hasOwnProperty('transfer-encoding') ||
+            req.headers.hasOwnProperty('content-length');
     }
 
 });
+
+
+function dataParser(type) {
+    switch(type) {
+
+    case 'json':
+        return JSON.parse;
+
+    case 'text':
+        return qs.parse;
+
+    default:
+        return function(data) { return data; };
+
+    }
+}
+
 
 }());

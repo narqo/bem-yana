@@ -47,17 +47,10 @@ Yana.Handler = inherit({
     /**
      * Request object constructor
      * @param {http.ServerRequest} req
-     * @returns {Yana.Request}
+     * @returns {Promise * Yana.Request}
      */
     _makeRequest : function(req) {
-        var YRequest = Yana.Request,
-            yreq = new YRequest(req);
-
-        return YRequest.parseBody(req)
-            .then(function(body) {
-                yreq.body = body;
-                return yreq;
-            });
+        return new Yana.Request(req);
     },
 
     /**
