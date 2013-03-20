@@ -1,4 +1,4 @@
-Yana.View.decl({ block : 'error404', base : 'error' }, {
+Yana.View.decl({ block : 'not-found', base : 'error' }, {
 
     render : function() {
         Yana.Logger.debug('Not found: "%s"', this._path);
