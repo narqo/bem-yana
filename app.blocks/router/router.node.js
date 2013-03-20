@@ -1,5 +1,12 @@
 Yana.Router = inherit({
 
+    /**
+     * @constructor
+     * @param {Object} routes
+     * @param {String} routes.rule
+     * @param {String} routes.action
+     * @param {Array} [routes.methods]
+     */
     __constructor : function(routes) {
         this._rules = routes;
         this._routes = this.__self._parse(routes);
@@ -7,20 +14,31 @@ Yana.Router = inherit({
 
     /**
      * @param {String} url
+     * @param {String} [method=GET]
      * @returns {Object}
      */
-    resolve : function(url) {
-        url = this.__self._normalizeUrl(url);
+    resolve : function(url, method) {
+        var self = this.__self;
+
+        method || (method = self.DEFAULT_METHOD);
+
+        url = self._normalizeUrl(url);
 
         var routes = this._routes,
             max = routes.length - 1,
             route,
+            lastMatched,
             m;
 
         Yana.Logger.debug('Going to route "%s"', url);
 
         while(route = routes[max--]) {
             if(m = route.regexp.exec(url)) {
+                lastMatched = route;
+
+                if(route.methods.length && !~route.methods.indexOf(method))
+                    continue;
+
                 var params = {},
                     keys = route.keys,
                     len = keys.length;
@@ -31,23 +49,39 @@ Yana.Router = inherit({
 
                 return {
                     action : route.action,
-                    path : url,
+                    path   : url,
+                    method : method,
                     params : params
                 };
             }
         }
 
-        Yana.Logger.debug('No resource found for "%s"', url);
+        if(lastMatched) {
+            Yana.Logger.debug('Resource for "%s" is not allowed for specified method (%s)', url, method);
+            return {
+                action : self.NOT_ALLOWED,
+                path   : url,
+                method : method,
+                params : {}
+            };
+        }
+
+        Yana.Logger.debug('No resource found for "%s" (%s)', url, method);
         return {
-            action : this.__self.NOT_FOUND,
-            path : url,
+            action : self.NOT_FOUND,
+            path   : url,
+            method : method,
             params : {}
         };
     },
 
+    /**
+     * @param req
+     * @returns {Object} Dispatched route declaration
+     */
     dispatch : function(req) {
         var url = Yana.Request.parseUrl(req),
-            resource = this.resolve(url.pathname);
+            resource = this.resolve(url.pathname, req.method.toUpperCase());
 
         return resource;
     },
@@ -60,7 +94,11 @@ Yana.Router = inherit({
 
 }, {
 
-    NOT_FOUND : 'error404',
+    NOT_FOUND : 'not-found',
+
+    NOT_ALLOWED : 'method-not-allowed',
+
+    DEFAULT_METHOD : 'GET',
 
     STOPS : {
         COMMON : '[^/]+'
@@ -76,6 +114,7 @@ Yana.Router = inherit({
         route.regexp = compiled.regexp;
         route.keys = compiled.keys;
         route.action = this._getRouteAction(route.action);
+        route.methods = this._getRouteMethods(route.methods);
 
         return route;
     },
@@ -103,6 +142,21 @@ Yana.Router = inherit({
 
     _getRouteAction : function(name) {
         return name;
+    },
+
+    _getRouteMethods : function(methods) {
+        if(!Array.isArray(methods))
+            return [];
+
+        methods = methods.map(function(m) {
+            return m.toUpperCase();
+        });
+
+        // XXX: автоматически добавлять HEAD в список методов, если есть GET
+        ~methods.indexOf('HEAD') ||
+            ~methods.indexOf('GET') && methods.push('HEAD');
+
+        return methods;
     },
 
     _normalizeUrl : function(url) {
