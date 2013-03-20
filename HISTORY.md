@@ -1,7 +1,11 @@
 
-0.2.0, 2013-03-03
+0.2.0, 2013-03-20
 -----------------
 
+  - "cluster" block added for [Node.js Cluster](http://nodejs.org/docs/v0.8.20/api/cluster.html) normalization
+  - "router" could now route request base on HTTP-method
+  - default error views were renamed for more descriptive names
+  - massive code refactoring
 
 0.1.4, 2013-03-01
 -----------------

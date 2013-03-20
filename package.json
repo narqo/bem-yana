@@ -1,7 +1,7 @@
 {
   "name": "bem-yana",
   "description": "Yet Another Node Application done BEM",
-  "version": "0.2.0-a",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/narqo/bem-yana.git"
