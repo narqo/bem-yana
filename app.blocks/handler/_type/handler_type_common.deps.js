@@ -7,7 +7,9 @@
         {
             block : 'view',
             elem : 'error',
-            mods : { type : ['404', '500'] }
+            mods : {
+                type : ['not-found', 'method-not-allowed', 'internal-error']
+            }
         }
     ]
 })
