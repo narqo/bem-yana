@@ -1,9 +1,9 @@
-App.View.decl('page', {
+Yana.View.decl('page', {
 
     _createContext : function() {
         return {
             request : this._req
-        }
+        };
     },
 
     /**
@@ -11,7 +11,7 @@ App.View.decl('page', {
      * @returns {String|Buffer}
      */
     render : function(ctx) {
-        App.Logger.debug('Page handler is runnig');
+        Yana.Logger.debug('Page handler is runnig');
 
         var req = ctx.request;
 

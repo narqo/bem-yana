@@ -1,7 +1,7 @@
 ({
     mustDeps : [
-        { block : 'i-promise' },
-        { block : 'app' }
+        { block : 'promise' },
+        { block : 'yana' }
     ],
     shouldDeps : [
         { block : 'logger' },

@@ -1,29 +1,56 @@
-App.Request = (function() {
+Yana.Request = (function() {
 
-var url = require('url'),
+var http = require('http'),
+    url = require('url'),
     qs = require('querystring'),
     cookies = require('cookies');
 
-return inherit({
+return inherit(http.IncomingMessage, {
 
+    /**
+     * @constructor
+     * @returns {Promise * Yana.Request}
+     */
     __constructor : function(req) {
-        return this._normalize(req);
+        req.__proto__ = this;
+
+        return req._normalize();
     },
 
-    _normalize : function(req) {
-        if(req._normalized)
-            return req;
+    _normalize : function() {
+        if(this._normalized)
+            return Vow.promise(this);
 
         var _self = this.__self;
 
-        _self.parseUrl(req);
-        _self.parseArgs(req);
-        _self.parseCookies(req);
+        return _self.parseBody(this)
+            .then(function(data) {
 
-        req._normalized = true;
+                this._bodyParser = dataParser(_self.parseDataType(this));
+                this._rawBody = data;
 
-        return req;
-    }
+                Object.defineProperty(this, 'body', {
+                    'get' : function() {
+                        if(this._body)
+                            return this._body;
+
+                        return this._body = this._bodyParser(this._rawBody);
+                    },
+
+                    'set' : function(val) {
+                        return this._rawBody;
+                    }
+                });
+
+                _self.parseUrl(this);
+                _self.parseArgs(this);
+                _self.parseCookies(this);
+
+                this._normalized = true;
+
+                return this;
+            }.bind(this));
+    },
 
 }, {
 
@@ -51,8 +78,69 @@ return inherit({
     parseMime : function(req) {
         var ct = req.headers['content-type'] || '';
         return ct.split(';')[0];
+    },
+
+    parseDataType : function(req) {
+        var mime = this.parseMime(req);
+        if('application/json' === mime)
+            return 'json';
+        return 'text';
+    },
+
+    parseBody : function(req) {
+        var promise = Vow.promise(),
+            body = {};
+
+        if(req.method === 'POST' && this.hasBody(req)) {
+            var buf = '';
+
+            req.setEncoding('utf8');
+
+            req
+                .on('data', function(chunk) {
+                    buf += chunk;
+                })
+                .once('end', function() {
+                    try {
+                        buf.length || (buf = {});
+                        promise.fulfill(buf);
+                    } catch(e) {
+                        promise.reject(new Yana.HttpError(400, e.message));
+                    }
+                })
+                .once('close', function() {
+                    promise.reject(new Yana.HttpError(500, 'connection closed'));
+                });
+        } else {
+            promise.fulfill(body);
+        }
+
+        return promise;
+    },
+
+    hasBody : function(req) {
+        return req.method === 'PUT' ||
+            req.headers.hasOwnProperty('transfer-encoding') ||
+            req.headers.hasOwnProperty('content-length');
     }
 
 });
+
+
+function dataParser(type) {
+    switch(type) {
+
+    case 'json':
+        return JSON.parse;
+
+    case 'text':
+        return qs.parse;
+
+    default:
+        return function(data) { return data; };
+
+    }
+}
+
 
 }());

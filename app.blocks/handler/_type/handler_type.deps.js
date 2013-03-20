@@ -1,6 +1,7 @@
 ({
     mustDeps : [
-        { block : 'app' },
-        { block : 'handler' }
+        { block : 'yana' }
+    ],
+    shouldDeps : [
     ]
 })

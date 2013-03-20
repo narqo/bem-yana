@@ -1,12 +1,13 @@
 ({
     mustDeps : [
-        { block : 'app' },
-        { block : 'router' }
+        { block : 'yana' },
+        { block : 'promise' }
     ],
     shouldDeps : [
+        { block : 'logger' },
+        { block : 'error' },
         { block : 'util' },
         { block : 'request' },
-        { block : 'view' },
-        { block : 'http', elem : 'error' }
+        { block : 'response' }
     ]
 })

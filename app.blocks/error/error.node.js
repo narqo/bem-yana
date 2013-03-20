@@ -1,4 +1,4 @@
-App.Error = inherit(Error, {
+Yana.Error = inherit(Error, {
 
     __constructor : function(message) {
         this.message = message;

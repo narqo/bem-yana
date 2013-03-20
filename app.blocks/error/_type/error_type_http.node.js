@@ -2,7 +2,7 @@
 
 var http = require('http');
 
-App.HttpError = inherit(App.Error, {
+Yana.HttpError = inherit(Yana.Error, {
 
     __constructor : function(code, message) {
         this.code = code;

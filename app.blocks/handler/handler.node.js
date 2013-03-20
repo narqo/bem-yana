@@ -1,43 +1,65 @@
-App.CommonHandler = inherit(App.Router, {
+Yana.Handler = inherit({
 
-    run : function() {
-        return this._handleRequest.bind(this);
+    /**
+     * @protected
+     * @returns {Function} Request handler
+     */
+    _run : function() {
+        return this._init.call(this, this._handleRequest.bind(this));
     },
 
+    /**
+     * @private
+     * @param {Function} handler
+     * @returns {Function}
+     */
+    _init : function(handler) {
+        var _t = this;
+        return function(req, res) {
+            _t._inited ||
+                (_t._inited = Vow.all([_t._makeRequest(req), _t._makeResponse(res)]));
+
+            return _t._inited.spread(function(req, res) {
+                    return handler.call(_t, req, res);
+                });
+        };
+    },
+
+    /**
+     * @protected
+     * @param {Yana.Request} req
+     * @param {Yana.Response} res
+     * @returns {Any}
+     */
     _handleRequest : function(req, res) {
-        req = new App.Request(req);
-
-        var route = this.dispatch(req);
-
-        App.Logger.debug('Route dispatched %j', route);
-
-        if(route.action === App.Router.NOT_FOUND) {
-            this.handle404.call(this, req, res, route);
-            return;
-        }
-
-        return this.handleRequest.call(this, req, res, route);
+        return this.handleRequest(req, res);
     },
 
-    handleRequest : function(req, res, route) {
-        return this.__self._getViewClass()
-            .create(route.action, req, res, route.path, route.params)
-            ._run();
+    /**
+     * @param {Yana.Request} req
+     * @param {Yana.Response} res
+     * @param {Any} [..args]
+     */
+    handleRequest : function(req, res) {
+        throw new Yana.Error('not implemented');
     },
 
-    handle404 : function(req, res, route) {
-        App.Logger.debug('Not found: "%s"', req.pathname);
-        throw new App.HttpError(404, 'Not found.');
+    /**
+     * Request object constructor
+     * @param {http.ServerRequest} req
+     * @returns {Promise * Yana.Request}
+     */
+    _makeRequest : function(req) {
+        return new Yana.Request(req);
     },
 
-    handle500 : function(req, res) {
-        throw new App.HttpError(500, 'Temporarily unavailable.');
-    }
-
-}, {
-
-    _getViewClass : function() {
-        return App.View;
+    /**
+     * Response object constructor
+     * @param {http.ServerResponse} res
+     * @returns {Yana.Response}
+     */
+    _makeResponse : function(res) {
+        return new Yana.Response(res);
     }
 
 });

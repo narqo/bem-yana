@@ -1,4 +1,4 @@
-App.View = (function() {
+Yana.View = (function() {
 
 var views = {};
 
@@ -8,11 +8,11 @@ var View = inherit({
         this._req = req;
         this._res = res;
         this._path = path;
-        this._params = params;
+        this._params = Yana.Util.merge(this._getDefaultParams(), params);
     },
 
     render : function(ctx) {
-        App.Logger.debug('Rendering request');
+        Yana.Logger.debug('Rendering request');
 
         return Vow.fulfill(1);
     },
@@ -24,18 +24,17 @@ var View = inherit({
     _createContext : function() {},
 
     _run : function() {
-        App.Logger.debug('Page for action: "%s", path: "%s" running.',
+        Yana.Logger.debug('Page for action: "%s", path: "%s" running.',
                 this._getName(), this._path);
 
         var ctx = this._createContext();
 
         return Vow.when(this.render.call(this, ctx))
-            .then(this._onCompleted.bind(this), this._onFailed.bind(this))
-            .done();
+            .then(this._onCompleted.bind(this), this._onFailed.bind(this));
     },
 
     _onCompleted : function(result) {
-        App.Logger.debug('Request for action "%s" proccesed.', this._getName());
+        Yana.Logger.debug('Request for action "%s" proccesed.', this._getName());
 
         var resultType = typeof result;
 
@@ -49,10 +48,14 @@ var View = inherit({
     },
 
     _onFailed : function(e) {
-        App.Logger.debug('Request for action "%s" failed with "%s".',
+        Yana.Logger.debug('Request for action "%s" failed with "%s".',
                 this._getName(), e.message);
 
-        throw new App.HttpError(500, e);
+        throw new Yana.HttpError(500, e);
+    },
+
+    _getDefaultParams : function() {
+        return {};
     }
 
 }, {
@@ -69,8 +72,8 @@ var View = inherit({
         typeof decl === 'string' && (decl = { block : decl });
 
         if(decl.base && !views[decl.base]) {
-            throw new App.ViewError(
-                    App.Util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
+            throw new Yana.ViewError(
+                    Yana.Util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
         }
 
         var base = views[decl.base || decl.block] || this;
@@ -80,7 +83,7 @@ var View = inherit({
 
     create : function(name, req, res, path, params) {
         if(!views[name]) {
-            throw new App.ViewError('View is not registered "' + name + '"');
+            throw new Yana.ViewError('View is not registered "' + name + '"');
         }
         return new views[name](req, res, path, params);
     }

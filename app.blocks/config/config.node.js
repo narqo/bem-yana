@@ -1,4 +1,4 @@
-App.Config = inherit({}, {
+Yana.Config = inherit({}, {
 
     param : function(name, val) {
         if(typeof val !== 'undefined') {
@@ -14,7 +14,7 @@ App.Config = inherit({}, {
         if(typeof params === 'undefined')
             return env;
 
-        return this.__env = App.Util.merge(env, params);
+        return this.__env = Yana.Util.merge(env, params);
     },
 
     __env : { }

@@ -1,4 +1,4 @@
-App.Util = (function() {
+Yana.Util = (function() {
 
 var util = require('util'),
     AppUtil = {

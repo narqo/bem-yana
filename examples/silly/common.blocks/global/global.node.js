@@ -1,12 +1,16 @@
+exports.config = Yana.Config;
+exports.init = init;
 exports.main = main;
 
-function main() {
-    var config = App.Config;
+
+function init() {
+    var config = Yana.Config;
 
     config.params({
 
         routes : [
-            { rule : '/$', action : 'page' },
+            { rule : '/', action : 'page' },
+            { rule : '/alb', action : 'page', methods : ['post', 'get'] },
             { rule : '/albums', action : 'page' },
             { rule : '/albums/{id}', action : 'page' },
             { rule : '/m', action : 'static' },
@@ -16,14 +20,13 @@ function main() {
 
     });
 
-    config.param('DEBUG', true);
-
     config.params({
+        DEBUG : true,
         STATIC_ROOT : require('path').resolve(__dirname),
         STATIC_URL  : '/m/'
     });
 
-    // TODO: method, params
+    // TODO: params
     /*
     <handler>
         .addRoute({
@@ -37,6 +40,17 @@ function main() {
         });
     */
 
-    var app = new App.Http();
-    app.run();
+    var app = new Yana.Http();
+    return app;
 };
+
+function main() {
+    Yana.Config.param('NODE').workers = require('os').cpus().length - 1;
+
+    var cluster = new Yana.Cluster(),
+        app = init(),
+        worker = app.run.bind(app);
+
+    cluster.run(worker);
+//    app.run();
+}

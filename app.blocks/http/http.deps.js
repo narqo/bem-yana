@@ -1,10 +1,16 @@
 ({
     mustDeps : [
-        { block : 'app', elems : ['runtime'] },
-        { block : 'config' },
+        { block : 'promise' },
+        { block : 'yana' }
     ],
     shouldDeps : [
-        { block : 'error', mods : { type : 'error' } },
-        { block : 'logger' }
+        { block : 'config' },
+        {
+            block : 'handler',
+            mods : { 'type' : 'common' }
+        },
+        { block : 'error' },
+        { block : 'logger' },
+        { block : 'yana', elem : 'default' }
     ]
 })

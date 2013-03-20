@@ -3,6 +3,6 @@
         { block : 'yana' }
     ],
     shouldDeps : [
-        { block : 'util' }
+        { block : 'error', mod : 'type', vals : ['http', 'view'] }
     ]
 })
