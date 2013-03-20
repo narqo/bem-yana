@@ -10,6 +10,7 @@ function init() {
 
         routes : [
             { rule : '/', action : 'page' },
+            { rule : '/alb', action : 'page', methods : ['post', 'get'] },
             { rule : '/albums', action : 'page' },
             { rule : '/albums/{id}', action : 'page' },
             { rule : '/m', action : 'static' },
@@ -25,7 +26,7 @@ function init() {
         STATIC_URL  : '/m/'
     });
 
-    // TODO: method, params
+    // TODO: params
     /*
     <handler>
         .addRoute({
@@ -44,11 +45,12 @@ function init() {
 };
 
 function main() {
-    Yana.Config.param('NODE').workers = require('os').cpus().length;
+    Yana.Config.param('NODE').workers = require('os').cpus().length - 1;
 
     var cluster = new Yana.Cluster(),
         app = init(),
         worker = app.run.bind(app);
 
     cluster.run(worker);
+//    app.run();
 }
