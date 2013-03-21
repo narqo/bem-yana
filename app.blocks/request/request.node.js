@@ -3,7 +3,7 @@ Yana.Request = (function() {
 var http = require('http'),
     url = require('url'),
     qs = require('querystring'),
-    cookies = require('cookies');
+    cookie = require('cookie');
 
 return inherit(http.IncomingMessage, {
 
@@ -34,7 +34,13 @@ return inherit(http.IncomingMessage, {
                         if(this._body)
                             return this._body;
 
-                        return this._body = this._bodyParser(this._rawBody);
+                        try {
+                            this._body = this._bodyParser(this._rawBody);
+                        } catch(e) {
+                            throw new Yana.HttpError(400, e.message);
+                        }
+
+                        return this._body;
                     },
 
                     'set' : function(val) {
@@ -71,8 +77,16 @@ return inherit(http.IncomingMessage, {
     },
 
     parseCookies : function(req) {
-        return req.cookies ||
-            (req.cookies =  new cookies(req));
+        if(req.cookies)
+            return req.cookies;
+
+        req.cookies = {};
+
+        var cookies = req.headers.cookie;
+        if(cookies)
+            req.cookies = cookie.parse(cookies);
+
+        return req.cookies;
     },
 
     parseMime : function(req) {
@@ -101,12 +115,7 @@ return inherit(http.IncomingMessage, {
                     buf += chunk;
                 })
                 .once('end', function() {
-                    try {
-                        buf.length || (buf = {});
-                        promise.fulfill(buf);
-                    } catch(e) {
-                        promise.reject(new Yana.HttpError(400, e.message));
-                    }
+                    promise.fulfill(buf);
                 })
                 .once('close', function() {
                     promise.reject(new Yana.HttpError(500, 'connection closed'));
@@ -126,18 +135,34 @@ return inherit(http.IncomingMessage, {
 
 });
 
+function nopParser(data) {
+    return data;
+}
+
+function jsonParser(data) {
+    data = data.trim();
+
+    if(!data.length)
+        throw new Yana.Error('json data is empty');
+
+    var firstChar = data.charAt(0);
+    if(firstChar == '{' || firstChar == '[')
+        return JSON.parse(data);
+
+    throw new Yana.Error('invalid json');
+}
 
 function dataParser(type) {
     switch(type) {
 
     case 'json':
-        return JSON.parse;
+        return jsonParser;
 
     case 'text':
         return qs.parse;
 
     default:
-        return function(data) { return data; };
+        return nopParser;
 
     }
 }

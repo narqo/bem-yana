@@ -1,7 +1,16 @@
 
+0.2.1, 2013-03-21
+-----------------
+
+  - use [node-cookie](git://github.com/shtylman/node-cookie.git) for cookie parsing instead of
+    [cookies](https://github.com/jed/cookies)
+  - Yana.Response#setCookie(), Yana.Response#deleteCookie() methods added
+  - request body parsers refactoring
+
 0.2.0, 2013-03-20
 -----------------
 
+  - App namespace renamed to Yana
   - "cluster" block added for [Node.js Cluster](http://nodejs.org/docs/v0.8.20/api/cluster.html) normalization
   - "router" could now route request base on HTTP-method
   - default error views were renamed for more descriptive names
