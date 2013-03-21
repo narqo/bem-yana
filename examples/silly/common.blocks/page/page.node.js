@@ -2,7 +2,8 @@ Yana.View.decl('page', {
 
     _createContext : function() {
         return {
-            request : this._req
+            request  : this._req,
+            response : this._res
         };
     },
 
@@ -13,9 +14,15 @@ Yana.View.decl('page', {
     render : function(ctx) {
         Yana.Logger.debug('Page handler is runnig');
 
-        var req = ctx.request;
+        var req = ctx.request,
+            res = ctx.response,
+            keys = ['method', 'path', 'query', 'body', 'cookies'];
 
-        return [req.method, req.path, JSON.stringify(req.query)].join('\n');
+        return keys.map(function(param) {
+                var val = req[param];
+                return typeof val === 'string'? val : JSON.stringify(val);
+            })
+            .join('\n');
     }
 
 });
