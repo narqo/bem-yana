@@ -3,7 +3,7 @@ Yana.Request = (function() {
 var http = require('http'),
     url = require('url'),
     qs = require('querystring'),
-    cookies = require('cookies');
+    cookie = require('cookie');
 
 return inherit(http.IncomingMessage, {
 
@@ -71,8 +71,16 @@ return inherit(http.IncomingMessage, {
     },
 
     parseCookies : function(req) {
-        return req.cookies ||
-            (req.cookies =  new cookies(req));
+        if(req.cookies)
+            return req.cookies;
+
+        req.cookies = {};
+
+        var cookies = req.headers.cookie;
+        if(cookies)
+            req.cookies = cookie.parse(cookies);
+
+        return req.cookies;
     },
 
     parseMime : function(req) {
