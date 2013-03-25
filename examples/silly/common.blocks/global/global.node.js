@@ -14,7 +14,7 @@ function init() {
             { rule : '/albums', action : 'page' },
             { rule : '/albums/{id}', action : 'page' },
             { rule : '/m', action : 'static' },
-            { rule : '/.*\.js$', action : 'static' },
+            { rule : '/.*\\.js$', action : 'static' },
             { rule : '/favicon.ico', action : 'static' }
         ]
 
@@ -42,7 +42,7 @@ function init() {
 
     var app = new Yana.Http();
     return app;
-};
+}
 
 function main() {
     Yana.Config.param('NODE').workers = require('os').cpus().length - 1;

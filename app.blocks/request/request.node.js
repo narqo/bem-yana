@@ -56,7 +56,7 @@ return inherit(http.IncomingMessage, {
 
                 return this;
             }.bind(this));
-    },
+    }
 
 }, {
 
