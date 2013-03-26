@@ -12,7 +12,7 @@ function init() {
             { rule : '/', action : 'page' },
             { rule : '/alb', action : 'page', methods : ['post', 'get'] },
             { rule : '/albums', action : 'page' },
-            { rule : '/albums/{id}', action : 'page' },
+            { rule : '/albums/{id:\\d+}', action : 'page' },
             { rule : '/m', action : 'static' },
             { rule : '/.*\\.js$', action : 'static' },
             { rule : '/favicon.ico', action : 'static' }
