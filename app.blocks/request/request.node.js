@@ -1,19 +1,59 @@
-Yana.Request = (function() {
+/* jshint node:true */
+/* global modules:false */
+
+(function() {
 
 var http = require('http'),
     url = require('url'),
     qs = require('querystring'),
     cookie = require('cookie');
 
-return inherit(http.IncomingMessage, {
+modules.define(
+    'yana:request',
+    ['inherit', 'promise', 'yana:error', 'yana:error_type_http'],
+    function(provide, inherit, Vow, YanaError, HttpError) {
+
+function nopParser(data) {
+    return data;
+}
+
+function jsonParser(data) {
+    data = data.trim();
+
+    if(!data.length)
+        throw new YanaError('json data is empty');
+
+    var firstChar = data.charAt(0);
+    if(firstChar == '{' || firstChar == '[')
+        return JSON.parse(data);
+
+    throw new YanaError('invalid json');
+}
+
+function dataParser(type) {
+    switch(type) {
+
+    case 'json':
+        return jsonParser;
+
+    case 'text':
+        return qs.parse;
+
+    default:
+        return nopParser;
+
+    }
+}
+
+provide(inherit(http.IncomingMessage, {
 
     /**
      * @constructor
-     * @returns {Promise * Yana.Request}
+     * @returns {Promise * Request}
      */
     __constructor : function(req) {
+        /* jshint proto:true */
         req.__proto__ = this;
-
         return req._normalize();
     },
 
@@ -37,7 +77,7 @@ return inherit(http.IncomingMessage, {
                         try {
                             this._body = this._bodyParser(this._rawBody);
                         } catch(e) {
-                            throw new Yana.HttpError(400, e.message);
+                            throw new HttpError(400, e.message);
                         }
 
                         return this._body;
@@ -118,7 +158,7 @@ return inherit(http.IncomingMessage, {
                     promise.fulfill(buf);
                 })
                 .once('close', function() {
-                    promise.reject(new Yana.HttpError(500, 'connection closed'));
+                    promise.reject(new HttpError(500, 'connection closed'));
                 });
         } else {
             promise.fulfill(body);
@@ -133,39 +173,8 @@ return inherit(http.IncomingMessage, {
             req.headers.hasOwnProperty('content-length');
     }
 
+}));
+
 });
-
-function nopParser(data) {
-    return data;
-}
-
-function jsonParser(data) {
-    data = data.trim();
-
-    if(!data.length)
-        throw new Yana.Error('json data is empty');
-
-    var firstChar = data.charAt(0);
-    if(firstChar == '{' || firstChar == '[')
-        return JSON.parse(data);
-
-    throw new Yana.Error('invalid json');
-}
-
-function dataParser(type) {
-    switch(type) {
-
-    case 'json':
-        return jsonParser;
-
-    case 'text':
-        return qs.parse;
-
-    default:
-        return nopParser;
-
-    }
-}
-
 
 }());

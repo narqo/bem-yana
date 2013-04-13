@@ -1,9 +1,17 @@
-Yana.Http = inherit({
+/* jshint node:true */
+/* global modules:false */
+
+modules.define(
+    'yana:http',
+    ['inherit', 'promise', 'yana:config', 'yana:logger', 'yana:util'],
+    function(provide, inherit, Vow, config, logger, util) {
+
+provide(inherit({
 
     __constructor : function(params) {
         this._handlers = [];
 
-        this._params = Yana.Util.merge(this._getDefaultParams(), params);
+        this._params = util.extend(this.getDefaultParams(), params);
 
         this
             ._loadHandlers()
@@ -11,15 +19,15 @@ Yana.Http = inherit({
     },
 
     run : function(port) {
-        port || (port = Yana.Config.param('NODE').port);
+        port || (port = config.node.port);
 
         this._server.listen(port, function() {
-            Yana.Logger.info('Server started on %d', port);
+            logger.info('Server started on %d', port);
         });
     },
 
     stop : function() {
-        Yana.Logger.debug('Server was stoped');
+        logger.debug('Server was stoped');
         this._server.close();
     },
 
@@ -31,7 +39,7 @@ Yana.Http = inherit({
     },
 
     _onRequest : function(req, res) {
-        Yana.Logger.debug('\nRequest for "%s" received', req.url);
+        logger.debug('\nRequest for "%s" received', req.url);
 
         var proc,
             hResultsP = this._handlers.reduce(function(val, handler) {
@@ -42,8 +50,8 @@ Yana.Http = inherit({
                         proc(req, res) :
                         Vow.when(val, function(result) {
                             if(res.finished) {
-                                Yana.Logger.debug('Response was finished before all the handlers processed!');
                                 // FIXME: do something usefull?
+                                logger.debug('Response was finished before all the handlers processed!');
                                 return;
                             }
 
@@ -57,7 +65,7 @@ Yana.Http = inherit({
     },
 
     _onError : function(req, res, err) {
-        Yana.Logger.debug('Error catched', err);
+        logger.debug('Error catched', err);
 
         var code = err.code || 500;
 
@@ -66,7 +74,7 @@ Yana.Http = inherit({
     },
 
     _onStackEnd : function(req, res) {
-        Yana.Logger.debug('All request handlers are passed');
+        logger.debug('All request handlers are passed');
 
         // XXX: should we really need this?
         res.finished || res.end();
@@ -77,14 +85,16 @@ Yana.Http = inherit({
             (this._server = this.__self._http.createServer(this._onRequest.bind(this)));
     },
 
-    _getDefaultParams : function() {
+    getDefaultParams : function() {
         return {
-            'handlers' : [ Yana.CommonHandler ]
+            'handlers' : []
         };
     }
 
 }, {
 
     _http : require('http')
+
+}));
 
 });

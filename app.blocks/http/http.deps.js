@@ -1,7 +1,7 @@
 ({
     mustDeps : [
-        { block : 'promise' },
-        { block : 'yana' }
+        { block : 'inherit' },
+        { block : 'promise' }
     ],
     shouldDeps : [
         { block : 'config' },

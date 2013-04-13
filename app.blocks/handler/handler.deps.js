@@ -1,9 +1,6 @@
 ({
-    mustDeps : [
-        { block : 'yana' },
-        { block : 'promise' }
-    ],
     shouldDeps : [
+        { block : 'promise' },
         { block : 'logger' },
         { block : 'error' },
         { block : 'util' },

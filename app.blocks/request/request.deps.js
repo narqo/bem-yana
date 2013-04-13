@@ -1,7 +1,7 @@
 ({
-    mustDeps : [
+    shouldDeps : [
+        { block : 'inherit' },
         { block : 'promise' },
-        { block : 'yana' },
         { block : 'error', mods : { type : 'http' } }
     ]
 })

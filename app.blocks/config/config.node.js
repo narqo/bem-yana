@@ -1,22 +1,8 @@
-Yana.Config = inherit({}, {
+/* jshint node:true */
+/* global modules:false */
 
-    param : function(name, val) {
-        if(typeof val !== 'undefined') {
-            this.__env[name] = val;
-        }
+modules.define('yana:config', function(provide) {
 
-        return this.__env[name];
-    },
-
-    params : function(params) {
-        var env = this.__env;
-
-        if(typeof params === 'undefined')
-            return env;
-
-        return this.__env = Yana.Util.merge(env, params);
-    },
-
-    __env : { }
+provide({});
 
 });

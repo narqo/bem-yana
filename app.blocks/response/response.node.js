@@ -1,14 +1,21 @@
-Yana.Response = (function() {
+/* jshint node:true */
+/* global modules:false */
+
+(function() {
 
 var http = require('http'),
-    cookie = require('cookie'),
-    logger = Yana.Logger;
+    cookie = require('cookie');
 
-return inherit(http.ServerResponse, {
+modules.define(
+    'yana:response',
+    ['inherit', 'yana:logger'],
+    function(provide, inherit, logger) {
+
+provide(inherit(http.ServerResponse, {
 
     __constructor : function(res) {
+        /* jshint proto:true */
         res.__proto__ = this;
-
         return res;
     },
 
@@ -62,6 +69,8 @@ return inherit(http.ServerResponse, {
 
         this.setCookie(name, '', opts? Yana.Util.merge(opts, options) : options);
     }
+
+}));
 
 });
 

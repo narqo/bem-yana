@@ -1,8 +1,16 @@
+/* jshint node:true */
+/* global modules:false */
+
 (function() {
 
 var http = require('http');
 
-Yana.HttpError = inherit(Yana.Error, {
+modules.define(
+    'yana:error_type_http',
+    ['inherit', 'yana:error'],
+    function(provide, inherit, YanaError) {
+
+provide(inherit(YanaError, {
 
     __constructor : function(code, message) {
         this.code = code;
@@ -12,6 +20,8 @@ Yana.HttpError = inherit(Yana.Error, {
     toString : function() {
         return 'HttpError ' + this.code + ': ' + this.message;
     }
+
+}));
 
 });
 

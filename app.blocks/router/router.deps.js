@@ -1,8 +1,7 @@
 ({
-    mustDeps : [
-        { block : 'yana' }
-    ],
     shouldDeps : [
-        { block : 'request' }
+        { block : 'inherit' },
+        { block : 'request' },
+        { block : 'logger' }
     ]
 })
