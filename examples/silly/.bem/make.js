@@ -29,7 +29,9 @@ MAKE.decl('BundleNode', {
             '../../../app.blocks',
             '../common.blocks'
             ]
-            .map(path.resolve.bind(null, __dirname));
+            .map(function(p) {
+                return path.resolve(__dirname, p);
+            });
     }
 
 });
