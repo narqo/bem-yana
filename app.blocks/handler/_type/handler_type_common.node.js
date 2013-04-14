@@ -3,7 +3,7 @@
 
 modules.define(
     'yana:handler_type_common',
-    ['inherit', 'handler', 'router', 'view', 'config', 'logger'],
+    ['inherit', 'yana:handler', 'yana:router', 'yana:view', 'yana:config', 'yana:logger'],
     function(provide, inherit, Handler, Router, View, config, logger) {
 
 provide(inherit(Handler, {
@@ -21,6 +21,8 @@ provide(inherit(Handler, {
 
         return this.handleRequest(req, res, route)
             .fail(function(err) {
+                logger.debug('Error catched, going to fallback');
+
                 route.action = 'internal-error';
                 route.params.error = err;
                 return this.handleRequest(req, res, route);

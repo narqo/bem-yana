@@ -41,6 +41,11 @@ provide(inherit({
     _onRequest : function(req, res) {
         logger.debug('\nRequest for "%s" received', req.url);
 
+        if(!this._handlers.length) {
+            logger.debug('No request handlers registered. Exiting');
+            return this._onStackEnd(req, res);
+        }
+
         var proc,
             hResultsP = this._handlers.reduce(function(val, handler) {
                 proc = (new handler())._run();

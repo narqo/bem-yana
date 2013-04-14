@@ -8,7 +8,7 @@ var util = require('util');
 modules.define('yana:util', function(provide) {
 
 var appUtil = {
-    extend : function() {
+    extend : function(target) {
         typeof target !== 'object' && (target = {});
 
         for(var i = 1, len = arguments.length; i < len; i++) {

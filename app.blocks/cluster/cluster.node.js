@@ -101,7 +101,7 @@ provide(inherit({
 
     getDefaultParams : function() {
         return {
-            workers : cofig.node.workers,
+            workers : config.node.workers,
             timeout : 2000
         };
     }

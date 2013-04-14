@@ -13,7 +13,7 @@ function log() {
 provide({
 
     debug : function() {
-        config.param('DEBUG') &&
+        config.debug &&
             log.apply(null, arguments);
     },
 

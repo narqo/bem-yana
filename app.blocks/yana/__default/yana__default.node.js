@@ -1,4 +1,6 @@
-modules.define('yana:config', function(provide) {
+modules.define(
+    'yana:config',
+    function(provide, config) {
 
 provide({
 

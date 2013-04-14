@@ -1,14 +1,13 @@
-modules.define(
-    'yana:view__error_type_internal-error',
-    ['yana:view'],
-    function(provide, View) {
+modules.require(['yana:view', 'yana:logger'], function(View, logger) {
 
-provide(View.decl({ block : 'internal-error', base : 'error' }, {
+View.decl({ block : 'internal-error', base : 'error' }, {
 
     render : function(ctx) {
+        logger.debug('InternalError handler is running');
+
         return this._params.error.toString();
     }
 
-}));
+});
 
 });

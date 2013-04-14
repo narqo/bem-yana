@@ -1,15 +1,14 @@
-modules.define(
-    'yana:view__error_type_method-not-allowed',
-    ['yana:view', 'yana:logger'],
-    function(provide, View, logger) {
+modules.require(
+    ['yana:view', 'yana:error_type_http', 'yana:logger'],
+    function(View, HttpError, logger) {
 
-provide(View.decl({ block : 'method-not-allowed', base : 'error' }, {
+View.decl({ block : 'method-not-allowed', base : 'error' }, {
 
     render : function() {
         logger.debug('Method not allowed: "%s"', this._path);
         throw new HttpError(405);
     }
 
-}));
+});
 
 });

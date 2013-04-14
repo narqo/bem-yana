@@ -1,7 +1,7 @@
 modules.define(
     'yana:router',
     ['inherit', 'yana:request', 'yana:logger'],
-    function(provide, Request, logger) {
+    function(provide, inherit, Request, logger) {
 
 provide(inherit({
 

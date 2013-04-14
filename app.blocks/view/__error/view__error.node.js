@@ -1,14 +1,13 @@
-modules.define(
-    'yana:view__error',
+modules.require(
     ['yana:view', 'yana:error_type_http'],
-    function(provide, View, HttpError) {
+    function(View, HttpError) {
 
-provide(View.decl('error', {
+View.decl('error', {
 
     render : function() {
         throw new HttpError(500);
     }
 
-}));
+});
 
 });
