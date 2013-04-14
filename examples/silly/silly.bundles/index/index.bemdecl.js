@@ -1,3 +1,3 @@
 exports.blocks = [
-    { block : 'global' }
+    { block : 'app', mods : { 'start' : 'auto' } }
 ];
