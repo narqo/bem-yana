@@ -1,11 +1,17 @@
-(function() {
+/* jshint node:true */
+/* global modules:false */
+
+modules.define(
+    'yana:cluster',
+    ['inherit', 'yana:util', 'yana:logger', 'yana:config'],
+    function(provide, inherit, util, logger, config) {
 
 var workers = {};
 
-Yana.Cluster = inherit({
+provide(inherit({
 
     __constructor : function(params) {
-        this._params = Yana.Util.merge(this._getDefaultParams(), params);
+        this._params = util.extend(this.getDefaultParams(), params);
     },
 
     run : function(worker) {
@@ -15,8 +21,9 @@ Yana.Cluster = inherit({
 
     stop : function() {
         var wrks = this.__self._cluster.workers;
-        wrks.forEach(function(worker) {
-            worker.destroy();
+
+        Object.keys(wrks).forEach(function(id) {
+            wrks[id].destroy();
         });
     },
 
@@ -24,7 +31,7 @@ Yana.Cluster = inherit({
         var nworkers = this._params.workers,
             cluster = this.__self._cluster;
 
-        Yana.Logger.debug('Going to start %d Workers', nworkers);
+        logger.debug('Going to start %d Workers', nworkers);
 
         while(nworkers--) {
             this._createWorker();
@@ -50,7 +57,7 @@ Yana.Cluster = inherit({
             id = this._getWorkerId(worker),
             pid = this._getWorkerPid(worker);
 
-        Yana.Logger.info('Starting Worker %d (PID): %d', id, pid);
+        logger.info('Starting Worker %d (PID): %d', id, pid);
 
         workers[id] = {
             worker : worker
@@ -61,7 +68,7 @@ Yana.Cluster = inherit({
 
     _onWorkerFork : function(worker) {
         workers[worker.id].timeout = setTimeout(function() {
-            Yana.Config.debug('Worker taking too long to start');
+            logger.debug('Worker taking too long to start');
         }, this._params.timeout);
     },
 
@@ -70,17 +77,17 @@ Yana.Cluster = inherit({
     },
 
     _onWorkerExit : function(worker) {
-        Yana.Logger.debug('Worker %d exit', this._getWorkerPid(worker));
+        logger.debug('Worker %d exit', this._getWorkerPid(worker));
         clearTimeout(timeouts[worker.id].timeout);
 
         if(!worker.suicide) {
-            Yana.Logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
+            logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
             this.__self._cluster.fork();
         }
     },
 
     _onWorkerDeath : function(worker) {
-        Yana.Logger.debug('Worker %d died', this._getWorkerPid(worker));
+        logger.debug('Worker %d died', this._getWorkerPid(worker));
         clearTimeout(timeouts[worker.id || worker.pid].timeout);
     },
 
@@ -92,9 +99,9 @@ Yana.Cluster = inherit({
         return worker.process? worker.process.pid : worker.pid;
     },
 
-    _getDefaultParams : function() {
+    getDefaultParams : function() {
         return {
-            workers : Yana.Config.param('NODE').workers,
+            workers : config.node.workers,
             timeout : 2000
         };
     }
@@ -105,6 +112,6 @@ Yana.Cluster = inherit({
 
     _workers : workers
 
-});
+}));
 
-}());
+});

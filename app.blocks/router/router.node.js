@@ -1,4 +1,9 @@
-Yana.Router = inherit({
+modules.define(
+    'yana:router',
+    ['inherit', 'yana:request', 'yana:logger'],
+    function(provide, inherit, Request, logger) {
+
+provide(inherit({
 
     /**
      * @constructor
@@ -30,8 +35,9 @@ Yana.Router = inherit({
             lastMatched,
             m;
 
-        Yana.Logger.debug('Going to route "%s"', url);
+        logger.debug('Going to route "%s"', url);
 
+        /* jshint boss:true */
         while(route = routes[max--]) {
             if(m = route.regexp.exec(url)) {
                 lastMatched = route;
@@ -57,7 +63,7 @@ Yana.Router = inherit({
         }
 
         if(lastMatched) {
-            Yana.Logger.debug('Resource for "%s" is not allowed for specified method (%s)', url, method);
+            logger.debug('Resource for "%s" is not allowed for specified method (%s)', url, method);
             return {
                 action : self.NOT_ALLOWED,
                 path   : url,
@@ -66,7 +72,7 @@ Yana.Router = inherit({
             };
         }
 
-        Yana.Logger.debug('No resource found for "%s" (%s)', url, method);
+        logger.debug('No resource found for "%s" (%s)', url, method);
         return {
             action : self.NOT_FOUND,
             path   : url,
@@ -80,7 +86,7 @@ Yana.Router = inherit({
      * @returns {Object} Dispatched route declaration
      */
     dispatch : function(req) {
-        var url = Yana.Request.parseUrl(req),
+        var url = Request.parseUrl(req),
             resource = this.resolve(url.pathname, req.method.toUpperCase());
 
         return resource;
@@ -164,5 +170,7 @@ Yana.Router = inherit({
             return url.slice(0, -1);
         return url;
     }
+
+}));
 
 });

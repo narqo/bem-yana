@@ -1,8 +1,6 @@
 ({
-    mustDeps : [
-        { block : 'router' }
-    ],
     shouldDeps : [
+        { block : 'router' },
         { block : 'view' },
         {
             block : 'view',

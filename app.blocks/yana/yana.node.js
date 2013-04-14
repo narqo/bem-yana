@@ -1,1 +1,5 @@
-var Yana = exports.Yana = {};
+modules.define('yana', function(provide) {
+
+// TODO
+
+});

@@ -1,4 +1,12 @@
-Yana.Handler = inherit({
+/* jshint node:true */
+/* global modules:false */
+
+modules.define(
+    'yana:handler',
+    ['inherit', 'promise', 'yana:request', 'yana:response', 'yana:error', 'yana:logger'],
+    function(provide, inherit, Vow, Request, Response, YanaError, logger) {
+
+provide(inherit({
 
     /**
      * @protected
@@ -41,7 +49,7 @@ Yana.Handler = inherit({
      * @param {Any} [..args]
      */
     handleRequest : function(req, res) {
-        throw new Yana.Error('not implemented');
+        throw new YanaError('not implemented');
     },
 
     /**
@@ -50,7 +58,7 @@ Yana.Handler = inherit({
      * @returns {Promise * Yana.Request}
      */
     _makeRequest : function(req) {
-        return new Yana.Request(req);
+        return new Request(req);
     },
 
     /**
@@ -59,7 +67,9 @@ Yana.Handler = inherit({
      * @returns {Yana.Response}
      */
     _makeResponse : function(res) {
-        return new Yana.Response(res);
+        return new Response(res);
     }
+
+}));
 
 });

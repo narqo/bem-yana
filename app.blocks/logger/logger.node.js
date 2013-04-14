@@ -1,15 +1,24 @@
-Yana.Logger = (function() {
+/* jshint node:true */
+/* global modules:false */
 
-var util = Yana.Util,
-    config = Yana.Config;
+modules.define(
+    'yana:logger',
+    ['yana:util', 'yana:config'],
+    function(provide, util, config) {
 
 function log() {
     console.log(util.format.apply(null, arguments));
 }
 
-return {
-    debug : function() { config.param('DEBUG') && log.apply(null, arguments); },
-    info  : log
-};
+provide({
 
-}());
+    debug : function() {
+        config.debug &&
+            log.apply(null, arguments);
+    },
+
+    info  : log
+
+});
+
+});

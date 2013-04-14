@@ -1,7 +1,15 @@
-Yana.CommonHandler = inherit(Yana.Handler, {
+/* jshint node:true */
+/* global modules:false */
+
+modules.define(
+    'yana:handler_type_common',
+    ['inherit', 'yana:handler', 'yana:router', 'yana:view', 'yana:config', 'yana:logger'],
+    function(provide, inherit, Handler, Router, View, config, logger) {
+
+provide(inherit(Handler, {
 
     __constructor : function() {
-        this._params = this._getDefaultParams();
+        this._params = this.getDefaultParams();
 
         this._router = new (this.__self._getRoutingClass())(this._params.routes);
     },
@@ -9,9 +17,16 @@ Yana.CommonHandler = inherit(Yana.Handler, {
     _handleRequest : function(req, res) {
         var route = this._router.dispatch(req);
 
-        Yana.Logger.debug('Route dispatched %j', route);
+        logger.debug('Route dispatched %j', route);
 
-        return this.handleRequest(req, res, route);
+        return this.handleRequest(req, res, route)
+            .fail(function(err) {
+                logger.debug('Error catched, going to fallback');
+
+                route.action = 'internal-error';
+                route.params.error = err;
+                return this.handleRequest(req, res, route);
+            }.bind(this));
     },
 
     handleRequest : function(req, res, route) {
@@ -20,20 +35,22 @@ Yana.CommonHandler = inherit(Yana.Handler, {
             ._run();
     },
 
-    _getDefaultParams : function() {
+    getDefaultParams : function() {
         return {
-            routes : Yana.Config.param('routes')
+            routes : config.routes
         };
     }
 
 }, {
 
     _getRoutingClass : function() {
-        return Yana.Router;
+        return Router;
     },
 
     _getViewClass : function() {
-        return Yana.View;
+        return View;
     }
+
+}));
 
 });

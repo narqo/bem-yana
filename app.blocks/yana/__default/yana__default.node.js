@@ -1,8 +1,12 @@
-Yana.Config.params({
+modules.define(
+    'yana:config',
+    function(provide, config) {
 
-    DEBUG : false,
+provide({
 
-    NODE : {
+    debug : false,
+
+    node : {
         port : 3001,
         socket : 'node.socket',
         workers : 1
@@ -11,16 +15,18 @@ Yana.Config.params({
     /**
      * @type String
      */
-    APP_ROOT : '',
+    app_root : '',
 
     /**
      * @type String
      */
-    STATIC_ROOT : '',
+    static_root : '',
 
     /**
      * @type String
      */
-    STATIC_URL : '/static/'
+    static_url : '/static/'
+
+});
 
 });

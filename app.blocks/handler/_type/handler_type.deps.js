@@ -1,7 +1,4 @@
 ({
-    mustDeps : [
-        { block : 'yana' }
-    ],
     shouldDeps : [
     ]
 })
