@@ -5,9 +5,9 @@
 
 var Vow = require('vow');
 
-modules.define('promise', function(provide, prev) {
+modules.define('vow', function(provide, prev) {
 
-provide(typeof prev === 'undefined'? Vow : null);
+provide(typeof prev === 'undefined'? Vow : prev);
 
 });
 
