@@ -16,8 +16,7 @@
     "ym": "0.0.1"
   },
   "devDependencies": {
-    "bem": "~0.5.23",
-    "supervisor": "~0.5.0"
+    "bem": "~0.5.23"
   },
   "author": "Vladimir Varankin <varankinv@yandex-team.ru> (http://github.com/narqo)",
   "readmeFilename": "README.md",

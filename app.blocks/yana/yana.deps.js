@@ -1,7 +1,0 @@
-({
-    mustDeps : [
-        { block : 'inherit' }
-    ],
-    shouldDeps : [
-    ]
-})
