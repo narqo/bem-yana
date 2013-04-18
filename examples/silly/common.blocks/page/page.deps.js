@@ -1,6 +1,6 @@
 ({
     shouldDeps : [
-        { block : 'view' },
-        { block : 'logger' }
+        { block : 'yana-view' },
+        { block : 'yana-logger' }
     ]
 })

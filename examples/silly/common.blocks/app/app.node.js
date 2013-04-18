@@ -1,19 +1,19 @@
 modules.define(
     'app',
-    ['yana:http', 'yana:handler_type_common', 'yana:cluster', 'yana:config'],
+    ['yana-http', 'yana-handler_type_common', 'yana-cluster', 'yana-config'],
     function(provide, Http, RequestHandler, Cluster, config) {
 
 function init() {
-    // TODO: params
+    // TODO- params
     /*
     <handler>
         .addRoute({
-            rule   : '/objects/{id}',
-            action : 'objects',
-            method : 'get',
-            params : {
-                'new' : true,
-                'type' : ['one', 'two']
+            rule   - '/objects/{id}',
+            action - 'objects',
+            method - 'get',
+            params - {
+                'new' - true,
+                'type' - ['one', 'two']
             }
         });
     */

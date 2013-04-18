@@ -1,6 +1,6 @@
 modules.define(
-    'yana:config',
-    ['yana:util'],
+    'yana-config',
+    ['yana-util'],
     function(provide, util, config) {
 
 var routes = [
@@ -13,7 +13,8 @@ var routes = [
         { rule : '/favicon.ico', action : 'static' }
     ];
 
-config.node.workers = require('os').cpus().length - 1;
+config.app.workers = require('os').cpus().length - 1;
+
 config.routes = routes;
 
 provide(util.extend(config, {

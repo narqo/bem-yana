@@ -1,10 +1,10 @@
 ({
     mustDeps : [
-        { block : 'yana', elem : 'default' }
+        { block : 'yana-app', elem : 'config' }
     ],
     shouldDeps : [
-        { block : 'config' },
-        { block : 'util' },
+        { block : 'yana-config' },
+        { block : 'yana-util' },
         { block : 'page' }
     ]
 })
