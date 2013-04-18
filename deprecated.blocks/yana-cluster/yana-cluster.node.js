@@ -1,8 +1,16 @@
+/* global modules:false */
+/* jshint node:true */
+
 /**
  * Cluster block, redefined for Node.js 0.6.x
  */
 
-Yana.Cluster = inherit(Yana.Cluster, {
+modules.define(
+    'yana-cluster',
+    ['inherit'],
+    function(provide, inherit, Cluster) {
+
+provide(inherit(Cluster, {
 
     stop : function() {
         var workers = this.__self._workers;
@@ -11,5 +19,7 @@ Yana.Cluster = inherit(Yana.Cluster, {
         });
         process.exit(1);
     }
+
+}));
 
 });
