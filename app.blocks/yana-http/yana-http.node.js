@@ -6,6 +6,9 @@ modules.define(
     ['inherit', 'vow', 'yana-config', 'yana-logger', 'yana-util'],
     function(provide, inherit, Vow, config, logger, util) {
 
+var FS = require('fs'),
+    env = config.app;
+
 provide(inherit({
 
     __constructor : function(params) {
@@ -22,10 +25,13 @@ provide(inherit({
      * @param {Numer|String} [port]
      */
     run : function(port) {
-        port || (port = config.app.port);
+        port || (port = env.socket || env.port);
 
         this._server.listen(port, function() {
             logger.info('Server started on "%s"', port);
+            if(env.socket) {
+                FS.chmod(env.socket, '0777');
+            }
         });
     },
 
