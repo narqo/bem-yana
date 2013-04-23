@@ -6,7 +6,8 @@ modules.define(
     ['inherit', 'yana-util', 'yana-logger', 'yana-config'],
     function(provide, inherit, util, logger, config) {
 
-var workers = {};
+var FS = require('fs'),
+    workers = {};
 
 provide(inherit({
 
@@ -29,7 +30,15 @@ provide(inherit({
 
     _init : function() {
         var nworkers = this._params.workers,
-            cluster = this.__self._cluster;
+            cluster = this.__self._cluster,
+            socket = config.app.socket;
+
+        if(socket) {
+            logger.debug('Trying unlink socket "%s" first', socket);
+            try {
+                FS.unlinkSync(socket);
+            } catch(e) {}
+        }
 
         logger.debug('Going to start %d Workers', nworkers);
 
