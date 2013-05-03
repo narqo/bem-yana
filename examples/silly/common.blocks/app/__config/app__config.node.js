@@ -21,6 +21,10 @@ provide(util.extend(config, {
 
     debug : true,
 
+    logger : {
+        level : 'debug'
+    },
+
     static_root : require('path').resolve(__dirname),
 
     static_url  : '/m/'

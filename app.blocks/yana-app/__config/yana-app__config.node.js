@@ -12,6 +12,10 @@ provide(util.extend(config, {
         port : 3001,
         socket : 'node.socket',
         workers : 1
+    },
+
+    logger : {
+        level : 'info'
     }
 
 }));
