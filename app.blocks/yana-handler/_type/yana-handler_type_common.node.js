@@ -3,19 +3,18 @@
 
 modules.define(
     'yana-handler_type_common',
-    ['inherit', 'yana-handler', 'yana-router', 'yana-view', 'yana-config', 'yana-logger'],
-    function(provide, inherit, Handler, Router, View, config, logger) {
+    ['inherit', 'yana-handler', 'yana-request', 'yana-view', 'yana-router', 'yana-config', 'yana-logger'],
+    function(provide, inherit, Handler, Request, View, router, config, logger) {
 
 provide(inherit(Handler, {
 
-    __constructor : function() {
-        this._params = this.getDefaultParams();
-
-        this._router = new Router(this._params.routes);
+    dispatch : function(req) {
+        logger.debug('Going to route "%s"', req.path);
+        return router.resolve(req.path, req.method.toUpperCase());
     },
 
     _handleRequest : function(req, res) {
-        var route = this._router.dispatch(req);
+        var route = this.dispatch(req);
 
         logger.debug('Route dispatched %j', route);
 
@@ -31,12 +30,6 @@ provide(inherit(Handler, {
 
     handleRequest : function(req, res, route) {
         return View.create(route.action, req, res, route.path, route.params)._run();
-    },
-
-    getDefaultParams : function() {
-        return {
-            routes : config.routes
-        };
     }
 
 }));
