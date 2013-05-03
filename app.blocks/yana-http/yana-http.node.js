@@ -22,13 +22,14 @@ provide(inherit({
     },
 
     /**
-     * @param {Numer|String} [port]
+     * @param {Numer|String} [portOrSoket]
      */
-    run : function(port) {
-        port || (port = env.socket || env.port);
+    run : function(portOrSoket) {
+        portOrSoket || (portOrSoket = env.socket || env.port);
 
-        this._server.listen(port, function() {
-            logger.info('Server started on "%s"', port);
+        this._server.listen(portOrSoket, function() {
+            logger.info('Server started on %s "%s"',
+                    typeof portOrSoket === 'number'? 'port' : 'socket', portOrSoket);
             if(env.socket) {
                 FS.chmod(env.socket, '0777');
             }
