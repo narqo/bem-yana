@@ -6,19 +6,9 @@ modules.define(
     ['yana-util', 'yana-config'],
     function(provide, util, config) {
 
-function log() {
-    console.log(util.format.apply(null, arguments));
-}
+var Log = require('log'),
+    cfg = config.logger;
 
-provide({
-
-    debug : function() {
-        config.debug &&
-            log.apply(null, arguments);
-    },
-
-    info  : log
-
-});
+provide(new Log(cfg.level, cfg.transport));
 
 });
