@@ -10,7 +10,7 @@ provide(util.extend(config, {
     app : {
         root : '',
         port : 3001,
-        socket : 'node.socket',
+//        socket : 'node.socket',
         workers : 1
     },
 
