@@ -28,12 +28,12 @@ Now lets run our project:
     › node examples/silly/run
     Server started on port 3001
 
-## BEM
-
-BEM is abbreviation for Block-Element-Modifier. It's a way to write code which is easy to support and develop.
-For more info about BEM metodology see [bem.info](http://bem.info/).
-
 ## License
 
-Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
+Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)<br/>
 Copyright 2013 Vladimir Varankin &lt;varankinv@yandex-team.ru&gt;
+
+## BEM
+
+BEM is abbreviation for Block-Element-Modifier. It's a way to write code which is easy to support and develop.<br/>
+For more info about BEM metodology see [bem.info](http://bem.info/).
