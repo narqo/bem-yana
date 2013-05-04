@@ -8,7 +8,7 @@ modules.define(
 
 var views = {};
 
-provide(inherit({
+var View = inherit({
 
     __constructor : function(req, res, path, params) {
         this._req = req;
@@ -18,12 +18,6 @@ provide(inherit({
     },
 
     createContext : function() {},
-
-    render : function(ctx) {
-        logger.debug('Rendering request');
-
-        return Vow.fulfill('Done!');
-    },
 
     _getName : function() {
         return this.__self.getName();
@@ -66,7 +60,7 @@ provide(inherit({
 
 }, {
 
-    _name : '__super',
+    _name : '',
 
     views : views,
 
@@ -82,7 +76,11 @@ provide(inherit({
                     util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
         }
 
-        var base = views[decl.base || decl.block] || this;
+        if(!views[decl.block]) {
+            decl.base = 'yana-view';
+        }
+
+        var base = views[decl.base] || View;
 
         (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
 
@@ -94,6 +92,15 @@ provide(inherit({
             throw new ViewError('View is not registered "' + name + '"');
         }
         return new views[name](req, res, path, params);
+    }
+
+});
+
+provide(View.decl('yana-view', {
+
+    render : function(ctx) {
+        logger.debug('Rendering request');
+        return Vow.fulfill('Done!');
     }
 
 }));
