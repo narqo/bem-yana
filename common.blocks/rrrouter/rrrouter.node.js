@@ -67,28 +67,32 @@ provide(inherit({
                 }
 
                 return {
-                    action : route.action,
                     path   : url,
                     method : method,
-                    params : params
+                    params : params,
+                    data   : route.data
                 };
             }
         }
 
         if(lastMatched) {
             return {
-                action : self.NOT_ALLOWED,
                 path   : url,
                 method : method,
-                params : {}
+                params : {},
+                data   : {
+                    action : self.NOT_ALLOWED
+                }
             };
         }
 
         return {
-            action : self.NOT_FOUND,
             path   : url,
             method : method,
-            params : {}
+            params : {},
+            data   : {
+                action : self.NOT_FOUND
+            }
         };
     },
 
@@ -132,7 +136,8 @@ provide(inherit({
 
         route.regexp = compiled.regexp;
         route.keys = compiled.keys;
-        route.action = this._getRouteAction(route.action);
+
+        route.data = this._getRouteData(route);
         route.methods = this._getRouteMethods(route.methods);
 
         return route;
@@ -159,8 +164,10 @@ provide(inherit({
         };
     },
 
-    _getRouteAction : function(name) {
-        return name;
+    _getRouteData : function(route) {
+        var data = route.data;
+        route.name && (data.name = route.name);
+        return data;
     },
 
     _getRouteMethods : function(methods) {
