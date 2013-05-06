@@ -22,14 +22,18 @@ provide(inherit(Handler, {
             .fail(function(err) {
                 logger.debug('Error catched, going to fallback');
 
-                route.action = 'internal-error';
+                // TODO: hardcode
+                route.data.action = 'internal-error';
                 route.params.error = err;
                 return this.handleRequest(req, res, route);
             }.bind(this));
     },
 
     handleRequest : function(req, res, route) {
-        return View.create(route.action, req, res, route.path, route.params)._run();
+        var action = route.data.action;
+        req.route = route;
+
+        return View.create(action, req, res, route.path, route.params)._run();
     }
 
 }));
