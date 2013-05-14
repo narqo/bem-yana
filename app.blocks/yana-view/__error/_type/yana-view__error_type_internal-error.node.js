@@ -10,8 +10,7 @@ provide(View.decl({ block : 'internal-error', base : 'error' }, {
 
     render : function(ctx) {
         logger.debug('InternalError handler is running');
-        var error = this._params.error;
-        return error.message;
+        return this._params.error;
     }
 
 }));
