@@ -2,9 +2,9 @@
 /* global modules:false */
 
 modules.define(
-    'yana-handler_type_common',
-    ['inherit', 'yana-handler', 'yana-request', 'yana-view', 'yana-router', 'yana-config', 'yana-logger'],
-    function(provide, inherit, Handler, Request, View, router, config, logger) {
+    'yana-handler',
+    ['inherit', 'yana-request', 'yana-view', 'yana-router', 'yana-config', 'yana-logger'],
+    function(provide, inherit, Request, View, router, config, logger, Handler) {
 
 provide(inherit(Handler, {
 
@@ -22,7 +22,7 @@ provide(inherit(Handler, {
             .fail(function(err) {
                 logger.debug('Error catched, going to fallback');
 
-                // TODO: hardcode
+                // FIXME: hardcode
                 route.data.action = 'internal-error';
                 route.params.error = err;
                 return this.handleRequest(req, res, route);
