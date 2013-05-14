@@ -1,14 +1,39 @@
 modules.define('yana-router', function(provide, router) {
 
 var routes = [
-    { rule : '/', action : 'page' },
-    { rule : '/alb', action : 'page', methods : ['post', 'get'] },
-    { rule : '/albums', action : 'page' },
-    { rule : '/albums/{id:\\d+}', action : 'page' },
-    { rule : '/libs/{lib:bem\-core}', action : 'page' },
-    { rule : '/m', action : 'static' },
-    { rule : '/.*\\.js$', action : 'static' },
-    { rule : '/favicon.ico', action : 'static' }
+    { 
+        rule : '/', 
+        data : {
+            action : 'page'
+        }
+    },
+    { 
+        rule : '/alb', 
+        data : {
+            action : 'page',
+        },
+        methods : ['post', 'get']
+    },
+    { 
+        rule : '/albums', 
+        data : { 
+            action : 'page' 
+        } 
+    },
+    { 
+        rule : '/albums/{id:\\d+}', 
+        data : {
+            action : 'page'
+        }
+    },
+    { 
+        rule : '/libs/{lib:bem\-core}', 
+        data : { 
+            action : 'page'
+        }
+    },
+    { rule : '/m', data : { action : 'static' } },
+    { rule : '/favicon.ico', data : { action : 'static' } }
 ];
 
 routes.forEach(function(route) {
