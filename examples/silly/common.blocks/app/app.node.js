@@ -1,6 +1,6 @@
 modules.define(
     'app',
-    ['yana-http', 'yana-handler_type_common', 'yana-cluster', 'yana-config'],
+    ['yana-http', 'yana-handler', 'yana-cluster', 'yana-config'],
     function(provide, Http, RequestHandler, Cluster, config) {
 
 function init() {
