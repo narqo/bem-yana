@@ -36,17 +36,15 @@ provide(inherit(http.ServerResponse, {
     },
 
     /**
-     * TODO: Подумать о том, чтобы выставлять cookie балком при `res.end()`
-     *
      * @param {String} name
      * @param {String} val
      * @param {Object} [opts]
-     * @param {String} [opts.maxAge]
-     * @param {String} [opts.domain]
-     * @param {String} [opts.path='/']
-     * @param {Number} [opts.expires]
-     * @param {Boolean} [opts.httpOnly=false]
-     * @param {Boolean} [opts.secure]
+     * @property {String} [opts.maxAge]
+     * @property {String} [opts.domain]
+     * @property {String} [opts.path='/']
+     * @property {Number} [opts.expires]
+     * @property {Boolean} [opts.httpOnly=false]
+     * @property {Boolean} [opts.secure]
      */
     setCookie : function(name, val, opts) {
         opts = util.extend({}, opts);
@@ -56,10 +54,10 @@ provide(inherit(http.ServerResponse, {
     },
 
     /**
-     * @param {Stirng} name
+     * @param {String} name
      * @param {Object} [opts]
-     * @param {String} [opts.domain]
-     * @param {String} [opts.path='/']
+     * @property {String} [opts.domain]
+     * @property {String} [opts.path='/']
      */
     deleteCookie : function(name, opts) {
         var options = {
