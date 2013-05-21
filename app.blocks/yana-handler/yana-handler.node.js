@@ -35,8 +35,8 @@ provide(inherit({
 
     /**
      * @protected
-     * @param {Yana.Request} req
-     * @param {Yana.Response} res
+     * @param {Request} req
+     * @param {Response} res
      * @returns {Any}
      */
     _handleRequest : function(req, res) {
@@ -44,9 +44,9 @@ provide(inherit({
     },
 
     /**
-     * @param {Yana.Request} req
-     * @param {Yana.Response} res
-     * @param {Any} [..args]
+     * @param {Request} req
+     * @param {Response} res
+     * @param {...Any} [args]
      */
     handleRequest : function(req, res) {
         throw new YanaError('not implemented');
@@ -55,7 +55,7 @@ provide(inherit({
     /**
      * Request object constructor
      * @param {http.ServerRequest} req
-     * @returns {Promise * Yana.Request}
+     * @returns {Promise * Request}
      */
     _makeRequest : function(req) {
         return new Request(req);
@@ -64,7 +64,7 @@ provide(inherit({
     /**
      * Response object constructor
      * @param {http.ServerResponse} res
-     * @returns {Yana.Response}
+     * @returns {Response}
      */
     _makeResponse : function(res) {
         return new Response(res);

@@ -8,21 +8,24 @@ var util = require('util');
 modules.define('yana-util', function(provide) {
 
 var appUtil = {
-    extend : function(target) {
-        typeof target !== 'object' && (target = {});
+        extend : function(target) {
+            typeof target !== 'object' && (target = {});
 
-        for(var i = 1, len = arguments.length; i < len; i++) {
-            var obj = arguments[i];
-            if(obj) {
-                for(var key in obj) {
-                    obj.hasOwnProperty(key) && (target[key] = obj[key]);
+            for(var i = 1, len = arguments.length; i < len; i++) {
+                var obj = arguments[i];
+                if(obj) {
+                    for(var key in obj) {
+                        obj.hasOwnProperty(key) && (target[key] = obj[key]);
+                    }
                 }
             }
-        }
 
-        return target;
-    }
-};
+            return target;
+        }
+    },
+    toStr = function(o) {
+        return o.toString();
+    };
 
 provide(
     appUtil.extend(util, appUtil, {

@@ -38,7 +38,7 @@ var View = inherit({
 
         var resultType = typeof result;
 
-        // result should be Buffer or string
+        // result should be Buffer or String
         result = resultType === 'undefined'? '' :
             (resultType === 'string'? result :
                 Buffer.isBuffer(result) || result.toString());

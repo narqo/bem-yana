@@ -1,5 +1,5 @@
-/* global modules:false */
 /* jshint node:true */
+/* global modules:false */
 
 /**
  * Cluster block, redefined for Node.js 0.6.x

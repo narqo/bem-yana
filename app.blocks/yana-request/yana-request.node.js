@@ -1,5 +1,5 @@
 /* jshint node:true */
-/* global modules:false, Vow */
+/* global modules:false */
 
 (function() {
 
