@@ -84,7 +84,8 @@ provide(inherit({
         }, this._params.timeout);
     },
 
-    _onWorkerListening : function(worker) {
+    _onWorkerListening : function(worker, address) {
+        logger.debug('Worker connected to %s:%s', address.address, address.port);
         clearTimeout(workers[worker.id].timeout);
     },
 
