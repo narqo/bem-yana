@@ -80,12 +80,12 @@ provide(inherit({
     },
 
     _onError : function(req, res, err) {
-        logger.debug('Error catched', err);
+        logger.debug('Error cached, %s', err.message, err.stack || '');
 
         var code = err.code || 500;
 
         res.writeHead(code, { 'Content-Type' : 'text/plain; charset=utf-8' });
-        res.end(err.stack || err.toString());
+        res.end(err.toString());
     },
 
     _onStackEnd : function(req, res) {
