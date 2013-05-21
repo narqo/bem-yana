@@ -15,6 +15,9 @@ provide(inherit({
         this._params = util.extend(this.getDefaultParams(), params);
     },
 
+    /**
+     * @param {Function} worker
+     */
     run : function(worker) {
         this.__self._cluster.isMaster?
             this._init() : worker();
@@ -87,7 +90,7 @@ provide(inherit({
 
     _onWorkerExit : function(worker) {
         logger.debug('Worker %d exit', this._getWorkerPid(worker));
-        clearTimeout(timeouts[worker.id].timeout);
+        clearTimeout(workers[worker.id].timeout);
 
         if(!worker.suicide) {
             logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
@@ -97,7 +100,7 @@ provide(inherit({
 
     _onWorkerDeath : function(worker) {
         logger.debug('Worker %d died', this._getWorkerPid(worker));
-        clearTimeout(timeouts[worker.id || worker.pid].timeout);
+        clearTimeout(workers[worker.id || worker.pid].timeout);
     },
 
     _getWorkerId : function(worker) {
