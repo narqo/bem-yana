@@ -10,7 +10,7 @@ var routes = [
     { 
         rule : '/alb', 
         data : {
-            action : 'page',
+            action : 'page'
         },
         methods : ['post', 'get']
     },
@@ -27,7 +27,7 @@ var routes = [
         }
     },
     { 
-        rule : '/libs/{lib:bem\-core}', 
+        rule : '/libs/{lib:bem\\-core}',
         data : { 
             action : 'page'
         }
