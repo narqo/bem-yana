@@ -8,8 +8,8 @@ var http = require('http'),
 
 modules.define(
     'yana-response',
-    ['inherit', 'yana-logger'],
-    function(provide, inherit, logger) {
+    ['inherit', 'yana-util', 'yana-logger'],
+    function(provide, inherit, util, logger) {
 
 provide(inherit(http.ServerResponse, {
 
@@ -49,7 +49,7 @@ provide(inherit(http.ServerResponse, {
      * @param {Boolean} [opts.secure]
      */
     setCookie : function(name, val, opts) {
-        opts = Yana.Util.merge({}, opts);
+        opts = util.extend({}, opts);
         opts.path || (opts.path = '/');
 
         this.setHeader('Set-Cookie', cookie.serialize(name, '' + val, opts));
@@ -67,7 +67,7 @@ provide(inherit(http.ServerResponse, {
             path    : '/'
         };
 
-        this.setCookie(name, '', opts? Yana.Util.merge(opts, options) : options);
+        this.setCookie(name, '', opts? util.extend(opts, options) : options);
     }
 
 }));
