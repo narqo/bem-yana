@@ -20,7 +20,7 @@ provide(inherit(Handler, {
 
         return this.handleRequest(req, res, route)
             .fail(function(err) {
-                logger.debug('Error catched, going to fallback');
+                logger.warn('Error catched, going to fallback');
 
                 // FIXME: hardcode
                 route.data.action = 'internal-error';
