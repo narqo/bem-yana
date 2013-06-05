@@ -10,6 +10,7 @@ provide(inherit(Handler, {
 
     dispatch : function(req) {
         logger.debug('Going to route "%s"', req.path);
+
         return router.resolve(req.path, req.method.toUpperCase());
     },
 
@@ -20,11 +21,12 @@ provide(inherit(Handler, {
 
         return this.handleRequest(req, res, route)
             .fail(function(err) {
-                logger.warn('Error catched, going to fallback');
+                logger.warning('Error catched, going to fallback');
 
                 // FIXME: hardcode
                 route.data.action = 'internal-error';
                 route.params.error = err;
+
                 return this.handleRequest(req, res, route);
             }.bind(this));
     },

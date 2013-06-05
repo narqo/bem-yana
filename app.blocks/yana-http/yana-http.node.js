@@ -52,7 +52,7 @@ provide(inherit({
         logger.debug('\nRequest for "%s" received', req.url);
 
         if(!this._handlers.length) {
-            logger.wanr('No request handlers registered. Exiting');
+            logger.warning('No request handlers registered. Exiting');
             return this._onStackEnd(req, res);
         }
 
@@ -66,7 +66,7 @@ provide(inherit({
                         Vow.when(val, function(result) {
                             if(res.finished) {
                                 // FIXME: do something usefull?
-                                logger.warn('Response for "%s" was finished before all the handlers processed!', req.url);
+                                logger.warning('Response for "%s" was finished before all the handlers processed!', req.url);
                                 return;
                             }
 
@@ -80,7 +80,7 @@ provide(inherit({
     },
 
     _onError : function(req, res, err) {
-        logger.error('[http] Error cached, %s', err.message, err.stack || '');
+        logger.error('Error cached, %s', err.message, err.stack || '');
 
         var code = err.code || 500;
 
