@@ -52,8 +52,9 @@ provide(inherit({
         cluster
             .on('fork', this._onWorkerFork.bind(this))
             .on('listening', this._onWorkerListening.bind(this))
-            .on('death', this._onWorkerDeath.bind.bind(this))
-            .on('exit', this._onWorkerExit.bind.bind(this));
+            .on('disconnect', this._onWorkerDisconnect.bind(this))
+            .on('death', this._onWorkerDeath.bind(this))
+            .on('exit', this._onWorkerExit.bind(this));
 
         // NOTE: make cluster and supervisor play nicely together
         // see https://github.com/isaacs/node-supervisor/issues/40 for details
@@ -80,28 +81,38 @@ provide(inherit({
 
     _onWorkerFork : function(worker) {
         workers[worker.id].timeout = setTimeout(function() {
-            logger.debug('Worker taking too long to start');
+            logger.error('Worker taking too long to start');
         }, this._params.timeout);
     },
 
     _onWorkerListening : function(worker, address) {
         logger.debug('Worker connected to %s:%s', address.address, address.port);
+
         clearTimeout(workers[worker.id].timeout);
     },
 
     _onWorkerExit : function(worker) {
         logger.debug('Worker %d exit', this._getWorkerPid(worker));
+
         clearTimeout(workers[worker.id].timeout);
 
         if(!worker.suicide) {
             logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
-            this.__self._cluster.fork();
+            this._createWorker();
         }
     },
 
+    _onWorkerDisconnect : function(worker) {
+        logger.error('Worker %d disconnect', this._getWorkerPid(worker));
+
+        clearTimeout(workers[worker.id].timeout);
+        this._createWorker();
+    },
+
     _onWorkerDeath : function(worker) {
-        logger.debug('Worker %d died', this._getWorkerPid(worker));
-        clearTimeout(workers[worker.id || worker.pid].timeout);
+        logger.error('Worker %d died', this._getWorkerPid(worker));
+
+        clearTimeout(workers[worker.id].timeout);
     },
 
     _getWorkerId : function(worker) {
