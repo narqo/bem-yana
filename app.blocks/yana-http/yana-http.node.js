@@ -80,7 +80,7 @@ provide(inherit({
     },
 
     _onError : function(req, res, err) {
-        logger.error('Error cached, %s', err.message, err.stack || '');
+        logger.error('Error cached for "%s", %s', req.url, err.message, err.stack || '');
 
         var code = err.code || 500;
 
