@@ -104,7 +104,7 @@ provide(inherit({
     },
 
     _onWorkerDisconnect : function(worker) {
-        logger.error('Worker %d disconnect, forking new one', this._getWorkerPid(worker));
+        logger.debug('Worker %d disconnect, forking new one', this._getWorkerPid(worker));
 
         clearTimeout(workers[worker.id].timeout);
         this._createWorker();
