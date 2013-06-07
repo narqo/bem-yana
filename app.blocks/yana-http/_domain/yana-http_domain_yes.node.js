@@ -25,7 +25,7 @@ provide(inherit(Http, {
     },
 
     _onError : function(req, res, err) {
-        if(CLUSTER.worker) {
+        if(CLUSTER.isWorker) {
             // FIXME: hardcoded killtimer value
             var killtimer = setTimeout(function() {
                 logger.debug('Closing down');
