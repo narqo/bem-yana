@@ -19,6 +19,8 @@ var View = inherit({
 
     createContext : function() {},
 
+    render : function() {},
+
     _getName : function() {
         return this.__self.getName();
     },
@@ -30,7 +32,7 @@ var View = inherit({
         var ctx = this.createContext();
 
         return Vow.when(this.render.call(this, ctx))
-            .then(this._onCompleted.bind(this), this._onFailed.bind(this));
+            .then(this._onCompleted, this._onFailed, this);
     },
 
     _onCompleted : function(result) {
@@ -40,7 +42,8 @@ var View = inherit({
 
         // result should be Buffer or String
         result = resultType === 'undefined'? '' :
-            (resultType === 'string'? result :
+            (resultType === 'string'?
+                result :
                 Buffer.isBuffer(result) || result.toString());
 
         this._res.write(result, 'utf-8');
@@ -48,10 +51,8 @@ var View = inherit({
     },
 
     _onFailed : function(e) {
-        logger.debug('Request for action "%s" failed with "%s".',
-                this._getName(), e.message);
-
-        throw new HttpError(500, e.message);
+        logger.debug('Request for action "%s" failed:', this._getName(), e);
+        throw new HttpError(500, e);
     },
 
     getDefaultParams : function() {

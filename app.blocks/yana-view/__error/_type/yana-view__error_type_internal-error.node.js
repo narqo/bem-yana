@@ -9,7 +9,7 @@ modules.define(
 provide(View.decl({ block : 'internal-error', base : 'error' }, {
 
     render : function(ctx) {
-        logger.debug('InternalError handler is running');
+        logger.debug('"%s" handler is running', this._getName());
         return this._params.error;
     }
 
