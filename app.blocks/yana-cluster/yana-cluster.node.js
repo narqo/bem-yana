@@ -96,14 +96,15 @@ provide(inherit({
 
         clearTimeout(workers[worker.id].timeout);
 
-        if(!worker.suicide) {
-            logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
-            this._createWorker();
-        }
+        // TODO: should really deal with cluster-workers-events
+//        if(!worker.suicide) {
+//            logger.debug('Worker %d died, forking new one', this._getWorkerPid(worker));
+//            this._createWorker();
+//        }
     },
 
     _onWorkerDisconnect : function(worker) {
-        logger.error('Worker %d disconnect', this._getWorkerPid(worker));
+        logger.error('Worker %d disconnect, forking new one', this._getWorkerPid(worker));
 
         clearTimeout(workers[worker.id].timeout);
         this._createWorker();
