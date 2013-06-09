@@ -32,8 +32,12 @@ var routes = [
             action : 'page'
         }
     },
-    { rule : '/m', data : { action : 'static' } },
-    { rule : '/favicon.ico', data : { action : 'static' } }
+    {
+        rule : '/leak',
+        data : {
+            action : 'page-error'
+        }
+    }
 ];
 
 routes.forEach(function(route) {
