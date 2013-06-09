@@ -17,7 +17,8 @@
     "log": "~1.4.0"
   },
   "devDependencies": {
-    "bem": "~0.5.23"
+    "bem": "~0.5.23",
+    "nodemon": "~0.7.8"
   },
   "author": "Vladimir Varankin <varankinv@yandex-team.ru> (http://github.com/narqo)",
   "readmeFilename": "README.md",
