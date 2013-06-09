@@ -77,15 +77,11 @@ var View = inherit({
                     util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
         }
 
-        if(!views[decl.block]) {
-            decl.base = 'yana-view';
-        }
-
-        var base = views[decl.base] || View;
+        var base = views[decl.base] || views['yana-view'] || View;
 
         (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
 
-        return views[decl.block];
+        return this;
     },
 
     create : function(name, req, res, path, params) {
