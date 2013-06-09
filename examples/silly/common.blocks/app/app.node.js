@@ -4,20 +4,6 @@ modules.define(
     function(provide, Http, RequestHandler, Cluster, config) {
 
 function init() {
-    // TODO- params
-    /*
-    <handler>
-        .addRoute({
-            rule   - '/objects/{id}',
-            action - 'objects',
-            method - 'get',
-            params - {
-                'new' - true,
-                'type' - ['one', 'two']
-            }
-        });
-    */
-
     var app = new Http({ handlers : [ RequestHandler ] });
     return app;
 }
