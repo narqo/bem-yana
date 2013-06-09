@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-http',
-    ['inherit', 'yana-logger'],
-    function(provide, inherit, logger, Http) {
+    ['inherit', 'yana-logger', 'yana-error'],
+    function(provide, inherit, logger, YanaError, Http) {
 
 var CLUSTER = require('cluster'),
     DOMAIN = require('domain');
@@ -25,34 +25,39 @@ provide(inherit(Http, {
     },
 
     _onError : function(req, res, err) {
-        if(CLUSTER.isWorker) {
-            // FIXME: hardcoded killtimer value
-            var killtimer = setTimeout(function() {
-                logger.debug('Closing down');
-                process.exit(1);
-            }, 2000);
+        var base = this.__base,
+            reqd = req.domain;
 
-            // @see http://nodejs.org/api/all.html#all_warning_don_t_ignore_errors
-            killtimer.unref();
-
-            // stop taking new requests
-            this.stop();
-
-            /*
-            Let the master know we're dead.  This will trigger a
-            `disconnect` in the cluster master, and then it will fork
-            a new worker.
-            */
-            logger.debug('It seems that we\'re in cluster, disconnecting');
-
-            CLUSTER.worker.disconnect();
+        // FIXME: it's seems like ugly hack!
+        if(err instanceof YanaError) {
+            // Ok, this is our error, we know what to do
+            return base(req, res, err);
         }
 
-        req.on('close', function() {
-            req.domain.dispose();
-        });
+        // Anything can happen now! Be very careful!
 
-        this.__base.apply(this, arguments);
+        try {
+            logger.debug('Disposing domain stuff');
+            reqd.dispose();
+
+            if(CLUSTER.isWorker) {
+                // @see http://nodejs.org/api/all.html#all_warning_don_t_ignore_errors
+                logger.debug('It seems that we\'re in cluster, disconnecting');
+
+                // stop taking new requests
+                this.stop();
+
+                // Let the master know we're dead.
+                // This will trigger a `disconnect` in the cluster master,
+                // and then it will fork a new worker
+                CLUSTER.worker.disconnect();
+            }
+
+            base(req, res, err);
+        } catch(newerr) {
+            logger.critical('Error sending proper error status for "%s"', req.url, newerr);
+            reqd.dispose();
+        }
     }
 
 }));
