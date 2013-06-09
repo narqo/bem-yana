@@ -1,6 +1,9 @@
-modules.define('yana-view', ['yana-logger'], function(provide, logger, View) {
+modules.define(
+    'yana-view',
+    ['yana-logger'],
+    function(provide, logger, View) {
 
-provide(View.decl('page', {
+View.decl('page', {
 
     createContext : function() {
         return {
@@ -27,6 +30,8 @@ provide(View.decl('page', {
             .join('\n');
     }
 
-}));
+});
+
+provide(View);
 
 });
