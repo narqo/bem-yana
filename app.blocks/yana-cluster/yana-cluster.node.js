@@ -108,7 +108,7 @@ provide(inherit({
         clearTimeout(workers[worker.id].disconnectTimer);
 
         if(!worker.suicide) {
-            logger.wa('Worker %d died abnormally', this._getWorkerPid(worker));
+            logger.warning('Worker %d died abnormally', this._getWorkerPid(worker));
 
             var minRestartAge = this._params.minRestartAge;
             if(worker.age < minRestartAge) {
