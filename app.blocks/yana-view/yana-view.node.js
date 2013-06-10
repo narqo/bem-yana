@@ -26,7 +26,7 @@ var View = inherit({
     },
 
     _run : function() {
-        logger.debug('Page for action: "%s", path: "%s" running.',
+        logger.debug('Page for action: "%s", path: "%s" running',
                 this._getName(), this._path);
 
         var ctx = this.createContext();
@@ -36,7 +36,12 @@ var View = inherit({
     },
 
     _onCompleted : function(result) {
-        logger.debug('Request for action "%s" proccesed.', this._getName());
+        if(this._res.finished) {
+            logger.debug('Request for action "%s" was already processed', this._getName());
+            return;
+        }
+
+        logger.debug('Request for action "%s" processed.', this._getName());
 
         var resultType = typeof result;
 
@@ -46,8 +51,7 @@ var View = inherit({
                 result :
                 Buffer.isBuffer(result) || result.toString());
 
-        this._res.write(result, 'utf-8');
-        this._res.end();
+        this._res.end(result, 'utf-8');
     },
 
     _onFailed : function(e) {
