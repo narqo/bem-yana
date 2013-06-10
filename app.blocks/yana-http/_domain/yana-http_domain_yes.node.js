@@ -12,16 +12,15 @@ var CLUSTER = require('cluster'),
 provide(inherit(Http, {
 
     _onRequest : function(req, res) {
-        var reqd = DOMAIN.create();
+        var domain = DOMAIN.create(),
+            onRequest = this.__base.bind(this, req, res);
 
-        reqd.add(req);
-        reqd.add(res);
+        domain.on('error', this._onError.bind(this, req, res));
 
-        reqd.on('error', this._onError.bind(this, req, res));
+        domain.add(req);
+        domain.add(res);
 
-        reqd.run(function() {
-            this.__base.call(this, req, res);
-        }.bind(this));
+        domain.run(onRequest);
     },
 
     _onError : function(req, res, err) {
