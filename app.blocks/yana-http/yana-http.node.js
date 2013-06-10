@@ -30,8 +30,9 @@ provide(inherit({
         this._server.listen(portOrSocket, function() {
             logger.info('Server started on %s "%s"',
                     typeof portOrSocket === 'number'? 'port' : 'socket', portOrSocket);
-            if(env.socket) {
-                FS.chmod(env.socket, '0777');
+
+            if(isNaN(+portOrSocket)) {
+                FS.chmod(portOrSocket, '0777');
             }
         });
     },
