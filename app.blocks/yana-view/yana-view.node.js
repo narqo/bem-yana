@@ -26,17 +26,21 @@ var View = inherit({
     },
 
     _run : function() {
-        logger.debug('Page for action: "%s", path: "%s" running.',
+        logger.debug('Page for action: "%s", path: "%s" running',
                 this._getName(), this._path);
 
         var ctx = this.createContext();
 
-        return Vow.when(this.render.call(this, ctx))
-            .then(this._onCompleted, this._onFailed, this);
+        return Vow.when(this.render.call(this, ctx), this._onCompleted, this);
     },
 
     _onCompleted : function(result) {
-        logger.debug('Request for action "%s" proccesed.', this._getName());
+        if(this._res.finished) {
+            logger.debug('Request for action "%s" was already processed', this._getName());
+            return;
+        }
+
+        logger.debug('Request for action "%s" processed.', this._getName());
 
         var resultType = typeof result;
 
@@ -46,14 +50,13 @@ var View = inherit({
                 result :
                 Buffer.isBuffer(result) || result.toString());
 
-        this._res.write(result, 'utf-8');
-        this._res.end();
+        this._res.end(result, 'utf-8');
     },
 
-    _onFailed : function(e) {
+    /*_onFailed : function(e) {
         logger.debug('Request for action "%s" failed:', this._getName(), e);
         throw new HttpError(500, e);
-    },
+    },*/
 
     getDefaultParams : function() {
         return {};
@@ -77,15 +80,11 @@ var View = inherit({
                     util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
         }
 
-        if(!views[decl.block]) {
-            decl.base = 'yana-view';
-        }
-
-        var base = views[decl.base] || View;
+        var base = views[decl.base] || views['yana-view'] || View;
 
         (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
 
-        return views[decl.block];
+        return this;
     },
 
     create : function(name, req, res, path, params) {

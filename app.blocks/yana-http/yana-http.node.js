@@ -30,8 +30,9 @@ provide(inherit({
         this._server.listen(portOrSocket, function() {
             logger.info('Server started on %s "%s"',
                     typeof portOrSocket === 'number'? 'port' : 'socket', portOrSocket);
-            if(env.socket) {
-                FS.chmod(env.socket, '0777');
+
+            if(isNaN(+portOrSocket)) {
+                FS.chmod(portOrSocket, '0777');
             }
         });
     },
@@ -74,9 +75,11 @@ provide(inherit({
                         });
         }, null);
 
-        hResultsP.then(
-            this._onStackEnd.bind(this, req, res),
-            this._onError.bind(this, req, res));
+        hResultsP
+            .then(
+                this._onStackEnd.bind(this, req, res),
+                this._onError.bind(this, req, res))
+            .done();
     },
 
     _onError : function(req, res, err) {
@@ -84,20 +87,52 @@ provide(inherit({
 
         var code = err.code || 500;
 
-        res.writeHead(code, { 'Content-Type' : 'text/plain; charset=utf-8' });
+        res.writeHead(code, {
+            'Content-Type' : 'text/plain; charset=utf-8',
+            'Connection' : 'close'
+        });
         res.end(err.toString());
     },
 
     _onStackEnd : function(req, res) {
         logger.debug('All request handlers are passed');
 
-        // XXX: should we really need this?
-        res.finished || res.end();
+        // `http#OutgoingMessage` internally checks for response to be finished,
+        // so we might not worry about that.
+        res.end();
+    },
+
+    _onClose : function() {
+        logger.warning('Server closing');
+
+        process.once('uncaughtException', function(e) {
+            logger.error('Shutdown error', e);
+        });
+
+        // @see https://github.com/isaacs/npm-www/blob/master/worker.js
+        // Race condition.  it's possible that we're closing because the
+        // master did worker.disconnect(), in which case the IPC channel
+        // will be in the process of closing right now.  give it a tick
+        // to accomplish that.
+        var t = setTimeout(function() {
+            process.connected && process.disconnect();
+        }, 100);
+
+        process.on('disconnect', function() {
+            clearTimeout(t)
+        });
     },
 
     _createServer : function() {
-        this._server ||
-            (this._server = this.__self._http.createServer(this._onRequest.bind(this)));
+        if(this._server) {
+            logger.warning('It seems that server was already created. Returning');
+            return this;
+        }
+
+        var server = this._server = this.__self._http.createServer(this._onRequest.bind(this));
+        server.on('close', this._onClose.bind(this));
+
+        return this;
     },
 
     getDefaultParams : function() {
