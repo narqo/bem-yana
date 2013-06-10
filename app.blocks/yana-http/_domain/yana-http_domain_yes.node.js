@@ -7,7 +7,9 @@ modules.define(
     function(provide, inherit, logger, YanaError, Http) {
 
 var CLUSTER = require('cluster'),
-    DOMAIN = require('domain');
+    DOMAIN = require('domain'),
+
+    assert = require('assert').ok;
 
 provide(inherit(Http, {
 
@@ -39,16 +41,6 @@ provide(inherit(Http, {
         }
 
         try {
-            res.on('finish', function() {
-                logger.debug('Response was finished, disposing domain stuff');
-                domain.dispose();
-            });
-
-            // Error handler should be postponed because of promises
-            process.nextTick(function() {
-                onError(req, res, err)
-            });
-
             if(CLUSTER.isWorker) {
                 // @see http://nodejs.org/api/all.html#all_warning_don_t_ignore_errors
                 logger.debug('It seems that we\'re in cluster, disconnecting');
@@ -61,6 +53,17 @@ provide(inherit(Http, {
                 // and then it will fork a new worker
                 CLUSTER.worker.disconnect();
             }
+
+            // @see https://github.com/ether/etherpad-lite/issues/1541 for @isaacs notes
+            logger.debug('Does socket still live?');
+            assert(!req.socket.destroyed, 'Socket was already destroyed');
+
+            res.on('finish', function() {
+                logger.debug('Response was finished, disposing domain stuff');
+                domain.dispose();
+            });
+
+            onError(req, res, err);
         } catch(newerr) {
             logger.critical('Error sending proper error status for "%s"', req.url, newerr);
             domain.dispose();
