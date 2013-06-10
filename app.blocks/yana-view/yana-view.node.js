@@ -31,8 +31,7 @@ var View = inherit({
 
         var ctx = this.createContext();
 
-        return Vow.when(this.render.call(this, ctx))
-            .then(this._onCompleted, this._onFailed, this);
+        return Vow.when(this.render.call(this, ctx), this._onCompleted, this);
     },
 
     _onCompleted : function(result) {
@@ -54,10 +53,10 @@ var View = inherit({
         this._res.end(result, 'utf-8');
     },
 
-    _onFailed : function(e) {
+    /*_onFailed : function(e) {
         logger.debug('Request for action "%s" failed:', this._getName(), e);
         throw new HttpError(500, e);
-    },
+    },*/
 
     getDefaultParams : function() {
         return {};
