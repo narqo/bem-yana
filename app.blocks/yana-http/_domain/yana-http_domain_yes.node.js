@@ -41,6 +41,10 @@ provide(inherit(Http, {
         }
 
         try {
+            // @see https://github.com/ether/etherpad-lite/issues/1541 for @isaacs notes
+            logger.debug('Does socket still live?');
+            assert(!req.socket.destroyed, 'Socket was already destroyed');
+
             if(CLUSTER.isWorker) {
                 // @see http://nodejs.org/api/all.html#all_warning_don_t_ignore_errors
                 logger.debug('It seems that we\'re in cluster, disconnecting');
@@ -54,10 +58,6 @@ provide(inherit(Http, {
                 CLUSTER.worker.disconnect();
             }
 
-            // @see https://github.com/ether/etherpad-lite/issues/1541 for @isaacs notes
-            logger.debug('Does socket still live?');
-            assert(!req.socket.destroyed, 'Socket was already destroyed');
-
             res.on('finish', function() {
                 logger.debug('Response was finished, disposing domain stuff');
                 domain.dispose();
@@ -65,7 +65,9 @@ provide(inherit(Http, {
 
             onError(req, res, err);
         } catch(newerr) {
-            logger.critical('Error sending proper error status for "%s"', req.url, newerr);
+            logger.critical('Error sending proper error status for "%s"',
+                req.url, newerr.message || newerr);
+
             domain.dispose();
         }
     }
