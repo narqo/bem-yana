@@ -75,9 +75,11 @@ provide(inherit({
                         });
         }, null);
 
-        hResultsP.then(
-            this._onStackEnd.bind(this, req, res),
-            this._onError.bind(this, req, res));
+        hResultsP
+            .then(
+                this._onStackEnd.bind(this, req, res),
+                this._onError.bind(this, req, res))
+            .done();
     },
 
     _onError : function(req, res, err) {
