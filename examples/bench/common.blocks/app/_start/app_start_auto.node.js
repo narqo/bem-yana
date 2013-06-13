@@ -1,5 +1,3 @@
-modules.require(['app'], function(start) {
-
-start();
-
+modules.require(['app'], function(app) {
+    app();
 });

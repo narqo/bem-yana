@@ -1,16 +1,10 @@
 modules.define(
     'app',
-    ['yana-http', 'yana-handler', 'yana-cluster'],
-    function(provide, Http, RequestHandler, Cluster) {
+    ['yana-http', 'yana-handler'],
+    function(provide, Http, RequestHandler) {
 
-provide(function() {
-    var app = new Http({ handlers : [ RequestHandler ] }),
-        start = app.run.bind(app);
+var app = new Http({ handlers : [ RequestHandler ] });
 
-    start();
-
-//    var cluster = new Cluster();
-//    cluster.run(worker);
-});
+provide(app.run.bind(app));
 
 });
