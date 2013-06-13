@@ -1,37 +1,4 @@
-/*global MAKE:true */
+/*global MAKE */
 
 require('../../../.bem/nodes');
-
-var path = require('path'),
-    environ = require('../../../.bem/environ');
-
-
-MAKE.decl('Arch', {
-
-    bundlesLevelsRegexp : /^.+?\.bundles$/
-
-});
-
-
-MAKE.decl('BundleNode', {
-
-    getTechs : function() {
-        return [
-            'bemdecl.js',
-            'deps.js',
-            'node.js'
-        ];
-    },
-
-    getLevels : function() {
-        return [
-            '../../../common.blocks',
-            '../../../app.blocks',
-            '../common.blocks'
-            ]
-            .map(function(p) {
-                return path.resolve(__dirname, p);
-            });
-    }
-
-});
+require('../../.bem/nodes');
