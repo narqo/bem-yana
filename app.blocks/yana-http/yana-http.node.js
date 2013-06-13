@@ -63,7 +63,7 @@ provide(inherit({
                 // FIXME: Обработчик POST-запроса срабатывает только на первый tick,
                 // поэтому первый handler нельзя завернуть в promise (node<=0.8)
                 return val === null?
-                        proc(req, res) :
+                        Vow.promise(proc(req, res)) :
                         Vow.when(val, function(result) {
                             if(res.finished) {
                                 // FIXME: do something usefull?

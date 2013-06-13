@@ -58,8 +58,9 @@ provide(inherit(http.IncomingMessage, {
     },
 
     _normalize : function() {
-        if(this._normalized)
-            return Vow.promise(this);
+        if(this._normalized) {
+            return Vow.resolve(this);
+        }
 
         var _self = this.__self;
 
@@ -71,8 +72,9 @@ provide(inherit(http.IncomingMessage, {
 
                 Object.defineProperty(this, 'body', {
                     'get' : function() {
-                        if(this._body)
+                        if(this._body) {
                             return this._body;
+                        }
 
                         try {
                             this._body = this._bodyParser(this._rawBody);
@@ -95,14 +97,15 @@ provide(inherit(http.IncomingMessage, {
                 this._normalized = true;
 
                 return this;
-            }.bind(this));
+            }, this);
     }
 
 }, {
 
     parseUrl : function(req) {
-        if(req._parsed)
+        if(req._parsed) {
             return req._parsed;
+        }
 
         req._parsed = url.parse(req.url);
         req.path = req._parsed.pathname;
@@ -117,8 +120,9 @@ provide(inherit(http.IncomingMessage, {
     },
 
     parseCookies : function(req) {
-        if(req.cookies)
+        if(req.cookies) {
             return req.cookies;
+        }
 
         req.cookies = {};
 
