@@ -34,19 +34,35 @@ kill -9 $pid
 sleep 2
 echo
 
-if [ ! -f "$examples/silly.bundles/index/_index.node.js" ]; then
+if [ ! -f "$examples/bench.bundles/sindle/_sindle.node.js" ] || \
+   [ ! -f "$examples/bench.bundles/cluster/_cluster.node.js" ]; then
     `npm bin`/bem make -r $examples -v warn
 fi
 
-node $examples/silly.bundles/index/_index.node.js &
+node $examples/bench.bundles/single/_single.node.js &
 
 disown
 pid=$!
 
 sleep .5
-bench /hello "Hello"
-bench /silly "Silly"
-bench /page "Page"
+bench /hello "Hello (single)"
+bench /silly "Silly (single)"
+bench /page "Page (single)"
+
+kill -9 $pid
+
+sleep 2
+echo
+
+node $examples/bench.bundles/cluster/_cluster.node.js &
+
+disown
+pid=$!
+
+sleep .5
+bench /hello "Hello (cluster)"
+bench /silly "Silly (cluster)"
+bench /page "Page (cluster)"
 
 kill -9 $pid
 
