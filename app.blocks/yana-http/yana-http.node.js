@@ -7,6 +7,7 @@ modules.define(
     function(provide, inherit, Vow, config, logger, util) {
 
 var FS = require('fs'),
+    HTTP = require('http'),
     env = config.app;
 
 provide(inherit({
@@ -64,7 +65,7 @@ provide(inherit({
                 // поэтому первый handler нельзя завернуть в promise (node<=0.8)
                 return val === null?
                         Vow.promise(proc(req, res)) :
-                        Vow.when(val, function(result) {
+                        Vow.when(val, function() {
                             if(res.finished) {
                                 // FIXME: do something usefull?
                                 logger.warning('Response for "%s" was finished before all the handlers processed!', req.url);
@@ -91,6 +92,7 @@ provide(inherit({
             'Content-Type' : 'text/plain; charset=utf-8',
             'Connection' : 'close'
         });
+
         res.end(err.toString());
     },
 
@@ -119,7 +121,7 @@ provide(inherit({
         }, 100);
 
         process.on('disconnect', function() {
-            clearTimeout(t)
+            clearTimeout(t);
         });
     },
 
@@ -129,7 +131,7 @@ provide(inherit({
             return this;
         }
 
-        var server = this._server = this.__self._http.createServer(this._onRequest.bind(this));
+        var server = this._server = HTTP.createServer(this._onRequest.bind(this));
         server.on('close', this._onClose.bind(this));
 
         return this;
@@ -140,10 +142,6 @@ provide(inherit({
             'handlers' : []
         };
     }
-
-}, {
-
-    _http : require('http')
 
 }));
 

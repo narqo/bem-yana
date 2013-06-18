@@ -20,12 +20,14 @@ function nopParser(data) {
 function jsonParser(data) {
     data = data.trim();
 
-    if(!data.length)
+    if(!data.length) {
         throw new YanaError('json data is empty');
+    }
 
     var firstChar = data.charAt(0);
-    if(firstChar == '{' || firstChar == '[')
+    if(firstChar === '{' || firstChar === '[') {
         return JSON.parse(data);
+    }
 
     throw new YanaError('invalid json');
 }
@@ -59,7 +61,7 @@ provide(inherit(http.IncomingMessage, {
 
     _normalize : function() {
         if(this._normalized) {
-            return Vow.resolve(this);
+            return Vow.promise(this);
         }
 
         var _self = this.__self;
@@ -85,7 +87,7 @@ provide(inherit(http.IncomingMessage, {
                         return this._body;
                     },
 
-                    'set' : function(val) {
+                    'set' : function() {
                         return this._rawBody;
                     }
                 });
@@ -115,8 +117,8 @@ provide(inherit(http.IncomingMessage, {
 
     parseArgs : function(req) {
         return req.query ||
-            (req.query = ~req.url.indexOf('?')?
-                 qs.parse(this.parseUrl(req).query) : {});
+            (req.query = req.url.indexOf('?') === -1?
+                {} : qs.parse(this.parseUrl(req).query));
     },
 
     parseCookies : function(req) {
@@ -127,8 +129,9 @@ provide(inherit(http.IncomingMessage, {
         req.cookies = {};
 
         var cookies = req.headers.cookie;
-        if(cookies)
+        if(cookies) {
             req.cookies = cookie.parse(cookies);
+        }
 
         return req.cookies;
     },
@@ -140,8 +143,9 @@ provide(inherit(http.IncomingMessage, {
 
     parseDataType : function(req) {
         var mime = this.parseMime(req);
-        if('application/json' === mime)
+        if('application/json' === mime) {
             return 'json';
+        }
         return 'text';
     },
 
