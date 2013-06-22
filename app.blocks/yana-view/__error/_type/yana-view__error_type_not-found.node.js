@@ -6,13 +6,15 @@ modules.define(
     ['yana-error_type_http', 'yana-logger'],
     function(provide, HttpError, logger, View) {
 
-provide(View.decl({ block : 'not-found', base : 'error' }, {
+View.decl({ name : 'not-found', base : 'error' }, {
 
     render : function() {
-        logger.debug('Not found: "%s"', this._path);
+        logger.debug('Path found: "%s"', this.path);
         throw new HttpError(404);
     }
 
-}));
+});
+
+provide(View);
 
 });
