@@ -43,8 +43,7 @@ var View = inherit({
                 this._getName(), this.path);
 
         var ctx = this.createContext();
-
-        return Vow.when(this.render.call(this, ctx), this._onCompleted, this);
+        return Vow.when(this.render(ctx), this._onCompleted, this);
     },
 
     _onCompleted : function(result) {
@@ -111,9 +110,9 @@ var View = inherit({
 
 provide(View.decl('yana-view', {
 
-    render : function(ctx) {
+    render : function() {
         logger.debug('Rendering request');
-        return Vow.fulfill('Done!');
+        return 'Done!';
     }
 
 }));
