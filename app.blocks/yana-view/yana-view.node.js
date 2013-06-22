@@ -85,16 +85,18 @@ var View = inherit({
     },
 
     decl : function(decl, props, staticProps) {
-        typeof decl === 'string' && (decl = { block : decl });
+        typeof decl === 'string' && (decl = { name : decl });
 
-        if(decl.base && !views[decl.base]) {
+        var base = decl.base;
+
+        if(base && !views[base]) {
             throw new ViewError(
-                    util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
+                    util.format('No base view "%s" registered for view "%s"', base, decl.name));
         }
 
-        var base = views[decl.base] || views['yana-view'] || View;
+        base = views[base] || views['yana-view'] || View;
 
-        (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
+        (views[decl.name] = inherit(base, props, staticProps))._name = decl.name;
 
         return this;
     },
