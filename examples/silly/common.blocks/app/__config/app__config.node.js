@@ -3,19 +3,22 @@ modules.define(
     ['yana-util'],
     function(provide, util, config) {
 
-config.app.workers = require('os').cpus().length - 1;
+var FS = require('fs');
 
 provide(util.extend(config, {
 
     debug : true,
 
-    logger : {
-        level : 'debug'
+    app : {
+        workers : 2,
+        port : 3014
+//        socket : '/tmp/bem-yana.sock'
     },
 
-    static_root : require('path').resolve(__dirname),
-
-    static_url  : '/m/'
+    logger : {
+        level : 'debug'
+//        transport : FS.createWriteStream(__dirname + '/../../node.log', { flags : 'a' })
+    }
 
 }));
 

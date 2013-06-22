@@ -1,9 +1,9 @@
 ({
     mustDeps : [
-        { block : 'page' }
+        'page'
     ],
     shouldDeps : [
-        { block : 'logger' },
-        { block : 'vow' }
+        'yana-logger',
+        'vow'
     ]
 })
