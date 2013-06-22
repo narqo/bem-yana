@@ -6,7 +6,7 @@ modules.define(
 View.decl({ name : 'page-404', base : 'page' }, {
 
     render : function() {
-        logger.debug('"%s" view should result with proper 404 statuses', this._getName());
+        logger.debug('"%s" view should result with proper 404 status', this._getName());
         throw new HttpError(404, 'This view should result proper 404 page');
     }
 

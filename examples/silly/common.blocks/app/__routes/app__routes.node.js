@@ -15,9 +15,9 @@ var routes = [
         methods : ['post', 'get']
     },
     { 
-        rule : '/albums', 
+        rule : '/albums',
         data : { 
-            action : 'page' 
+            action : 'page'
         } 
     },
     { 
@@ -30,6 +30,12 @@ var routes = [
         rule : '/libs/{lib:bem\\-core}',
         data : {
             action : 'page'
+        }
+    },
+    {
+        rule : '/redirect',
+        data : {
+            action : 'page-redirect'
         }
     },
     {
