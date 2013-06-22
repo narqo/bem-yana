@@ -28,7 +28,7 @@ var appUtil = {
     };
 
 provide(
-    appUtil.extend(util, appUtil, {
+    appUtil.extend(appUtil, util, {
 
         unique : function(arr) {
             var res = [],
