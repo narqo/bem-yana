@@ -32,7 +32,7 @@ var View = inherit({
 
     createContext : function() {},
 
-    render : function() {},
+    render : function(ctx) {},
 
     _getName : function() {
         return this.__self.getName();
@@ -52,7 +52,7 @@ var View = inherit({
             return;
         }
 
-        logger.debug('Request for action "%s" processed.', this._getName());
+        logger.debug('Request for action "%s" processed', this._getName());
 
         var resultType = typeof result;
 
