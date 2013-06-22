@@ -1,4 +1,7 @@
 ({
+    mustDeps : [
+        { block : 'yana-handler' }
+    ],
     shouldDeps : [
         { block : 'yana-request' },
         { block : 'yana-router' },
