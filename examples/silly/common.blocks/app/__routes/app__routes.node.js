@@ -1,14 +1,14 @@
 modules.define('yana-router', function(provide, router) {
 
 var routes = [
-    { 
-        rule : '/', 
+    {
+        rule : '/',
         data : {
             action : 'page'
         }
     },
-    { 
-        rule : '/alb', 
+    {
+        rule : '/alb',
         data : {
             action : 'page'
         },
@@ -26,9 +26,9 @@ var routes = [
             action : 'page'
         }
     },
-    { 
+    {
         rule : '/libs/{lib:bem\\-core}',
-        data : { 
+        data : {
             action : 'page'
         }
     },
@@ -36,6 +36,12 @@ var routes = [
         rule : '/leak',
         data : {
             action : 'page-error'
+        }
+    },
+    {
+        rule : '/404',
+        data : {
+            action : 'page-404'
         }
     }
 ];

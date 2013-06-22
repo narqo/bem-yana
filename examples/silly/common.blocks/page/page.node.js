@@ -7,8 +7,8 @@ View.decl('page', {
 
     createContext : function() {
         return {
-            request  : this._req,
-            response : this._res
+            request  : this.req,
+            response : this.res
         };
     },
 

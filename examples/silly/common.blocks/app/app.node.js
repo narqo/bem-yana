@@ -13,8 +13,8 @@ provide(function() {
         app = init(),
         worker = app.run.bind(app);
 
-    cluster.run(worker);
 //    app.run();
+    cluster.run(worker);
 });
 
 });

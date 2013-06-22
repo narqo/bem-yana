@@ -1,7 +1,4 @@
-modules.define(
-    'yana-view',
-    ['yana-router'],
-    function(provide, Router, View) {
+modules.define('yana-view', ['yana-router'], function(provide, Router, View) {
 
 Router.addRoute({
     name : 'document',
@@ -14,7 +11,7 @@ Router.addRoute({
 View.decl('page', {
 
     /**
-     * @param {Object} ctx Context to render
+     * @param {Object} [ctx] Context to render
      * @returns {String|Buffer}
      */
     render : function(ctx) {

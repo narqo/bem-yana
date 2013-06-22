@@ -14,12 +14,25 @@ var View = inherit({
         this._req = req;
         this._res = res;
         this._path = path;
-        this._params = util.extend(this.getDefaultParams(), params);
+
+        Object.defineProperties(this, {
+            'req' : {
+                get : function() { return this._req }
+            },
+            'res' : {
+                get : function() { return this._res }
+            },
+            'path' : {
+                get : function() { return this._path }
+            }
+        });
+
+        this.params = util.extend(this.getDefaultParams(), params);
     },
 
     createContext : function() {},
 
-    render : function() {},
+    render : function(ctx) {},
 
     _getName : function() {
         return this.__self.getName();
@@ -27,20 +40,19 @@ var View = inherit({
 
     _run : function() {
         logger.debug('Page for action: "%s", path: "%s" running',
-                this._getName(), this._path);
+                this._getName(), this.path);
 
         var ctx = this.createContext();
-
-        return Vow.when(this.render.call(this, ctx), this._onCompleted, this);
+        return Vow.when(this.render(ctx), this._onCompleted, this);
     },
 
     _onCompleted : function(result) {
-        if(this._res.finished) {
-            logger.debug('Request for action "%s" was already processed', this._getName());
+        if(this.res.finished) {
+            logger.debug('Request for path "%s" was already processed', this.path);
             return;
         }
 
-        logger.debug('Request for action "%s" processed.', this._getName());
+        logger.debug('Request for action "%s" processed', this._getName());
 
         var resultType = typeof result;
 
@@ -50,7 +62,7 @@ var View = inherit({
                 result :
                 Buffer.isBuffer(result) || result.toString());
 
-        this._res.end(result, 'utf-8');
+        this.res.end(result, 'utf-8');
     },
 
     /*_onFailed : function(e) {
@@ -73,16 +85,18 @@ var View = inherit({
     },
 
     decl : function(decl, props, staticProps) {
-        typeof decl === 'string' && (decl = { block : decl });
+        typeof decl === 'string' && (decl = { name : decl });
 
-        if(decl.base && !views[decl.base]) {
+        var base = decl.base;
+
+        if(base && !views[base]) {
             throw new ViewError(
-                    util.format('No base view "%s" registered for view "%s"', decl.base, decl.block));
+                    util.format('No base view "%s" registered for view "%s"', base, decl.name));
         }
 
-        var base = views[decl.base] || views['yana-view'] || View;
+        base = views[base] || views['yana-view'] || View;
 
-        (views[decl.block] = inherit(base, props, staticProps))._name = decl.block;
+        (views[decl.name] = inherit(base, props, staticProps))._name = decl.name;
 
         return this;
     },
@@ -98,9 +112,9 @@ var View = inherit({
 
 provide(View.decl('yana-view', {
 
-    render : function(ctx) {
+    render : function() {
         logger.debug('Rendering request');
-        return Vow.fulfill('Done!');
+        return 'Done!';
     }
 
 }));

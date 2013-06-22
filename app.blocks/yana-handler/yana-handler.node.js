@@ -13,7 +13,7 @@ provide(inherit({
      * @returns {Function} Request handler
      */
     _run : function() {
-        return this._init.call(this, this._handleRequest.bind(this));
+        return this._init(this._handleRequest.bind(this));
     },
 
     /**

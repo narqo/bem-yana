@@ -6,13 +6,15 @@ modules.define(
     ['yana-error_type_http', 'yana-logger'],
     function(provide, HttpError, logger, View) {
 
-provide(View.decl({ block : 'method-not-allowed', base : 'error' }, {
+View.decl({ name : 'method-not-allowed', base : 'error' }, {
 
     render : function() {
-        logger.debug('Method not allowed: "%s"', this._path);
+        logger.debug('Method not allowed: "%s"', this.path);
         throw new HttpError(405);
     }
 
-}));
+});
+
+provide(View);
 
 });

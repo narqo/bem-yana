@@ -1,7 +1,4 @@
-modules.define(
-    'app',
-    ['yana-cluster'],
-    function(provide, Cluster, app) {
+modules.define('app', ['yana-cluster'], function(provide, Cluster, app) {
 
 var cluster = new Cluster();
 provide(function() {
