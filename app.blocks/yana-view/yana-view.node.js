@@ -14,7 +14,20 @@ var View = inherit({
         this._req = req;
         this._res = res;
         this._path = path;
-        this._params = util.extend(this.getDefaultParams(), params);
+
+        Object.defineProperties(this, {
+            'req' : {
+                get : function() { return this._req }
+            },
+            'res' : {
+                get : function() { return this._res }
+            },
+            'path' : {
+                get : function() { return this._path }
+            }
+        });
+
+        this.params = util.extend(this.getDefaultParams(), params);
     },
 
     createContext : function() {},
@@ -27,7 +40,7 @@ var View = inherit({
 
     _run : function() {
         logger.debug('Page for action: "%s", path: "%s" running',
-                this._getName(), this._path);
+                this._getName(), this.path);
 
         var ctx = this.createContext();
 
@@ -35,8 +48,8 @@ var View = inherit({
     },
 
     _onCompleted : function(result) {
-        if(this._res.finished) {
-            logger.debug('Request for action "%s" was already processed', this._getName());
+        if(this.res.finished) {
+            logger.debug('Request for path "%s" was already processed', this.path);
             return;
         }
 
@@ -50,7 +63,7 @@ var View = inherit({
                 result :
                 Buffer.isBuffer(result) || result.toString());
 
-        this._res.end(result, 'utf-8');
+        this.res.end(result, 'utf-8');
     },
 
     /*_onFailed : function(e) {
