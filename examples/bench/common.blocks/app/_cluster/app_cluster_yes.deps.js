@@ -1,5 +1,5 @@
 ({
     shouldDeps : [
-        { block : 'yana-cluster' }
+        'yana-cluster'
     ]
 });

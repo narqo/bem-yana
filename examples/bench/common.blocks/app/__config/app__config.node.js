@@ -1,7 +1,4 @@
-modules.define(
-    'yana-config',
-    ['yana-util'],
-    function(provide, util, config) {
+modules.define('yana-config', ['yana-util'], function(provide, util, config) {
 
 var workers = require('os').cpus().length - 2;
 

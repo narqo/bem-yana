@@ -1,7 +1,4 @@
-modules.define(
-    'yana-handler',
-    ['inherit'],
-    function(provide, inherit, Handler) {
+modules.define('yana-handler', ['inherit'], function(provide, inherit, Handler) {
 
 provide(inherit(Handler, {
 

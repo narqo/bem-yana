@@ -1,6 +1,6 @@
 ({
     mustDeps: [
-        { block : 'modules' }
+        'modules'
     ],
     shouldDeps : [
         { block : 'yana-http' },

@@ -1,7 +1,7 @@
 ({
     mustDeps : [
-        { block : 'modules' },
-        { block : 'yana-view' },
-        { block : 'yana-router' }
+        'modules',
+        'yana-view',
+        'yana-router'
     ]
 });
