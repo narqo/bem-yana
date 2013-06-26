@@ -1,17 +1,15 @@
 /* jshint node:true */
 /* global modules:false */
 
-(function() {
-
-var http = require('http'),
-    url = require('url'),
-    qs = require('querystring'),
-    cookie = require('cookie');
-
 modules.define(
     'yana-request',
     ['inherit', 'vow', 'yana-error', 'yana-error_type_http'],
     function(provide, inherit, Vow, YanaError, HttpError) {
+
+var HTTP = require('http'),
+    URL = require('url'),
+    QS = require('querystring'),
+    COOKIE = require('cookie');
 
 function nopParser(data) {
     return data;
@@ -39,7 +37,7 @@ function dataParser(type) {
         return jsonParser;
 
     case 'text':
-        return qs.parse;
+        return QS.parse;
 
     default:
         return nopParser;
@@ -47,59 +45,42 @@ function dataParser(type) {
     }
 }
 
-provide(inherit(http.IncomingMessage, {
+var Request = inherit({
 
     /**
      * @constructor
      * @returns {Promise * Request}
      */
     __constructor : function(req) {
-        /* jshint proto:true */
-        req.__proto__ = this;
-        return req._normalize();
+        return this._normalize(req);
     },
 
-    _normalize : function() {
+    _normalize : function(req) {
         if(this._normalized) {
-            return Vow.promise(this);
+            return req;
         }
 
-        var _self = this.__self;
+        var self = this.__self;
 
-        return _self.parseBody(this)
+        self.parseUrl(req);
+        self.parseArgs(req);
+        self.parseCookies(req);
+
+        return self.parseBody(req)
             .then(function(data) {
+                req._body = data;
 
-                this._bodyParser = dataParser(_self.parseDataType(this));
-                this._rawBody = data;
+                try {
+                    var parse = dataParser(self.parseDataType(req));
+                    req.body = parse(data);
+                } catch(e) {
+                    throw new HttpError(400, e.message);
+                }
 
-                Object.defineProperty(this, 'body', {
-                    'get' : function() {
-                        if(this._body) {
-                            return this._body;
-                        }
+                req._normalized = true;
 
-                        try {
-                            this._body = this._bodyParser(this._rawBody);
-                        } catch(e) {
-                            throw new HttpError(400, e.message);
-                        }
-
-                        return this._body;
-                    },
-
-                    'set' : function() {
-                        return this._rawBody;
-                    }
-                });
-
-                _self.parseUrl(this);
-                _self.parseArgs(this);
-                _self.parseCookies(this);
-
-                this._normalized = true;
-
-                return this;
-            }, this);
+                return req;
+            });
     }
 
 }, {
@@ -109,7 +90,7 @@ provide(inherit(http.IncomingMessage, {
             return req._parsed;
         }
 
-        req._parsed = url.parse(req.url);
+        req._parsed = URL.parse(req.url);
         req.path = req._parsed.pathname;
 
         return req._parsed;
@@ -118,7 +99,7 @@ provide(inherit(http.IncomingMessage, {
     parseArgs : function(req) {
         return req.query ||
             (req.query = req.url.indexOf('?') === -1?
-                {} : qs.parse(this.parseUrl(req).query));
+                {} : QS.parse(this.parseUrl(req).query));
     },
 
     parseCookies : function(req) {
@@ -130,7 +111,7 @@ provide(inherit(http.IncomingMessage, {
 
         var cookies = req.headers.cookie;
         if(cookies) {
-            req.cookies = cookie.parse(cookies);
+            req.cookies = COOKIE.parse(cookies);
         }
 
         return req.cookies;
@@ -178,11 +159,11 @@ provide(inherit(http.IncomingMessage, {
     hasBody : function(req) {
         return req.method === 'PUT' ||
             req.headers.hasOwnProperty('transfer-encoding') ||
-            req.headers.hasOwnProperty('content-length');
+            req.headers['content-length'] !== '0';
     }
-
-}));
 
 });
 
-}());
+provide(Request);
+
+});
