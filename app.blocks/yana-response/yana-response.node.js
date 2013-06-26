@@ -1,23 +1,18 @@
 /* jshint node:true */
 /* global modules:false */
 
-(function() {
-
-var http = require('http'),
-    cookie = require('cookie');
-
 modules.define(
     'yana-response',
-    ['inherit', 'yana-util', 'yana-logger'],
-    function(provide, inherit, util, logger) {
+    ['yana-util', 'yana-logger'],
+    function(provide, util, logger) {
 
-provide(inherit(http.ServerResponse, {
+var HTTP = require('http'),
+    COOKIE = require('cookie');
 
-    __constructor : function(res) {
-        /* jshint proto:true */
-        res.__proto__ = this;
-        return res;
-    },
+provide({
+
+    /* jshint proto:true */
+    __proto__ : HTTP.ServerResponse.prototype,
 
     /**
      * @param {Number} [status=302]
@@ -50,7 +45,7 @@ provide(inherit(http.ServerResponse, {
         opts = util.extend({}, opts);
         opts.path || (opts.path = '/');
 
-        this.setHeader('Set-Cookie', cookie.serialize(name, '' + val, opts));
+        this.setHeader('set-cookie', COOKIE.serialize(name, '' + val, opts));
     },
 
     /**
@@ -68,8 +63,6 @@ provide(inherit(http.ServerResponse, {
         this.setCookie(name, '', opts? util.extend(opts, options) : options);
     }
 
-}));
-
 });
 
-}());
+});
