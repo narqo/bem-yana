@@ -87,11 +87,7 @@ provide(inherit({
             return this._onStackEnd(req, res);
         }
 
-        /* jshint proto:true */
-        res.__proto__ = Response;
-
-        // NOTE: parse request's body
-        Vow.all([new Request(req), res])
+        Vow.all([this._serverRequest(req), this._serverResponse(res)])
             .spread(
                 this._rqhandler,
                 this._onStackEnd.bind(this, req, res),
@@ -139,6 +135,26 @@ provide(inherit({
         process.on('disconnect', function() {
             clearTimeout(t);
         });
+    },
+
+    _serverRequest : function(req) {
+        /* jshint proto:true */
+        req.__proto__ = Request;
+        return Vow.all([
+                req.parseUrl(),
+                req.parseArgs(),
+                req.parseCookies(),
+                req.parseBody()
+            ])
+            .then(function() {
+                return req;
+            });
+    },
+
+    _serverResponse : function(res) {
+        /* jshint proto:true */
+        res.__proto__ = Response;
+        return res;
     },
 
     _createServer : function() {
