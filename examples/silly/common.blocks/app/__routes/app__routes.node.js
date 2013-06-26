@@ -14,14 +14,14 @@ var routes = [
         },
         methods : ['post', 'get']
     },
-    { 
+    {
         rule : '/albums',
-        data : { 
+        data : {
             action : 'page'
-        } 
+        }
     },
-    { 
-        rule : '/albums/{id:\\d+}', 
+    {
+        rule : '/albums/{id:\\d+}',
         data : {
             action : 'page'
         }
