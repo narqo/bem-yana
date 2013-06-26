@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-request',
-    ['inherit', 'vow', 'yana-error', 'yana-error_type_http'],
-    function(provide, inherit, Vow, YanaError, HttpError) {
+    ['vow', 'yana-error', 'yana-error_type_http'],
+    function(provide, Vow, YanaError, HttpError) {
 
 var HTTP = require('http'),
     URL = require('url'),
@@ -45,96 +45,62 @@ function dataParser(type) {
     }
 }
 
-var Request = inherit({
+var Request = {
 
-    /**
-     * @constructor
-     * @returns {Promise * Request}
-     */
-    __constructor : function(req) {
-        return this._normalize(req);
-    },
+    /* jshint proto:true */
+    __proto__ : HTTP.IncomingMessage.prototype,
 
-    _normalize : function(req) {
-        if(this._normalized) {
-            return req;
+    parseUrl : function() {
+        if(this._parsed) {
+            return this._parsed;
         }
 
-        var self = this.__self;
+        this._parsed = URL.parse(this.url);
+        this.path = this._parsed.pathname;
 
-        self.parseUrl(req);
-        self.parseArgs(req);
-        self.parseCookies(req);
-
-        return self.parseBody(req)
-            .then(function(data) {
-                req._body = data;
-
-                try {
-                    var parse = dataParser(self.parseDataType(req));
-                    req.body = parse(data);
-                } catch(e) {
-                    throw new HttpError(400, e.message);
-                }
-
-                req._normalized = true;
-
-                return req;
-            });
-    }
-
-}, {
-
-    parseUrl : function(req) {
-        if(req._parsed) {
-            return req._parsed;
-        }
-
-        req._parsed = URL.parse(req.url);
-        req.path = req._parsed.pathname;
-
-        return req._parsed;
+        return this._parsed;
     },
 
-    parseArgs : function(req) {
-        return req.query ||
-            (req.query = req.url.indexOf('?') === -1?
-                {} : QS.parse(this.parseUrl(req).query));
+    parseArgs : function() {
+        return this.query ||
+            (this.query = this.url.indexOf('?') === -1?
+                {} : QS.parse(this.parseUrl().query));
     },
 
-    parseCookies : function(req) {
-        if(req.cookies) {
-            return req.cookies;
+    parseCookies : function() {
+        if(this.cookies) {
+            return this.cookies;
         }
 
-        req.cookies = {};
+        this.cookies = {};
 
-        var cookies = req.headers.cookie;
+        var cookies = this.headers.cookie;
         if(cookies) {
-            req.cookies = COOKIE.parse(cookies);
+            this.cookies = COOKIE.parse(cookies);
         }
 
-        return req.cookies;
+        return this.cookies;
     },
 
-    parseMime : function(req) {
-        var ct = req.headers['content-type'] || '';
+    parseMime : function() {
+        var ct = this.headers['content-type'] || '';
         return ct.split(';')[0];
     },
 
-    parseDataType : function(req) {
-        var mime = this.parseMime(req);
+    parseDataType : function() {
+        var mime = this.parseMime();
         if('application/json' === mime) {
             return 'json';
         }
         return 'text';
     },
 
-    parseBody : function(req) {
+    parseBody : function() {
         var promise = Vow.promise(),
+            req = this,
             body = {};
 
-        if(req.method === 'POST' && this.hasBody(req)) {
+        if(req.method === 'POST' && this.hasBody()) {
             var buf = '';
 
             req.setEncoding('utf8');
@@ -144,24 +110,45 @@ var Request = inherit({
                     buf += chunk;
                 })
                 .once('end', function() {
-                    promise.fulfill(buf);
+                    promise.fulfill(req._rawBody = buf);
                 })
                 .once('close', function() {
                     promise.reject(new HttpError(500, 'connection closed'));
                 });
         } else {
-            promise.fulfill(body);
+            promise.fulfill(req._rawBody = body);
         }
 
         return promise;
     },
 
-    hasBody : function(req) {
-        return req.method === 'PUT' ||
-            req.headers.hasOwnProperty('transfer-encoding') ||
-            req.headers['content-length'] !== '0';
+    hasBody : function() {
+        return this.method === 'PUT' ||
+            this.headers.hasOwnProperty('transfer-encoding') ||
+            this.headers['content-length'] !== '0';
     }
 
+};
+
+Object.defineProperty(Request, 'body', {
+    get : function() {
+        if(this._body) {
+            return this._body;
+        }
+
+        try {
+            var parse = dataParser(Request.parseDataType(this));
+            this._body = parse(this._rawBody);
+        } catch(e) {
+            throw new HttpError(400, e.message);
+        }
+
+        return this._body;
+    },
+
+    set : function() {
+        return this._rawBody;
+    }
 });
 
 provide(Request);
