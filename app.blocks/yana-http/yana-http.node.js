@@ -147,8 +147,10 @@ provide(inherit({
             return this;
         }
 
-        var server = this._server = HTTP.createServer(this._onRequest.bind(this));
-        server.on('close', this._onClose.bind(this));
+        var server = this._server = HTTP.createServer();
+
+        server.on('request', this._onRequest.bind(this));
+        server.once('close', this._onClose.bind(this));
 
         return this;
     },
