@@ -28,7 +28,7 @@ provide(inherit(Handler, {
                 route.params.error = err;
 
                 return this.handleRequest(req, res, route);
-            });
+            }, this);
     },
 
     handleRequest : function(req, res, route) {
