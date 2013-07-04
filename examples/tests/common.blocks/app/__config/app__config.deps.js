@@ -1,8 +1,7 @@
+/* jshint asi:true */
 ({
     mustDeps : [
         { block : 'yana-config' },
-        { block : 'yana-app', elem : 'defaults' }
-    ],
-    shouldDeps : [
+        { block : 'yana-app', elems : 'defaults' }
     ]
-});
+})

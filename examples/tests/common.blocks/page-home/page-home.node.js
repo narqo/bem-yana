@@ -18,4 +18,6 @@ View.decl('page-home', {
 
 });
 
+provide(View);
+
 });
