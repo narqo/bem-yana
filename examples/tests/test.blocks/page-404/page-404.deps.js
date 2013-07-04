@@ -1,9 +1,11 @@
+/* jshint asi:true */
 ({
     mustDeps : [
-        'page'
+        'yana-view'
     ],
     shouldDeps : [
-        { block : 'yana-logger' },
+        'yana-router',
+        'yana-logger',
         { block : 'yana-error', mods : { type : 'http' } }
     ]
 })
