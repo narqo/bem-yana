@@ -1,7 +1,1 @@
-exports.getTechs = function() {
-    return {
-        'examples' : '',
-        'title.txt' : '',
-        'deps.js' : ''
-    };
-};
+exports.baseLevelPath = require.resolve('../../../../.bem/levels/blocks.js');
