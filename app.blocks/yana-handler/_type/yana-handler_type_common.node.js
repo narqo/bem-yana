@@ -21,10 +21,11 @@ provide(inherit(Handler, {
 
         return Vow.when(this.handleRequest(req, res, route))
             .fail(function(err) {
-                logger.warning('Error catched, going to fallback');
+                var fallback = router.__self.ACTIONS.INTERNAL_ERROR;
 
-                // FIXME: hardcode
-                route.data.action = 'internal-error';
+                logger.warning('Error catched, going to fallback \\w "%s"', fallback);
+
+                route.data.action = fallback;
                 route.params.error = err;
 
                 return this.handleRequest(req, res, route);

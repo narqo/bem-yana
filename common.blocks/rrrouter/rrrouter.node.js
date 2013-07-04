@@ -58,6 +58,7 @@ provide(inherit({
 
         var routes = this._routes,
             max = routes.length - 1,
+            actions = self.ACTIONS,
             route,
             lastMatched,
             m;
@@ -93,7 +94,7 @@ provide(inherit({
                 method : method,
                 params : {},
                 data   : {
-                    action : self.NOT_ALLOWED
+                    action : actions.NOT_ALLOWED
                 }
             };
         }
@@ -103,7 +104,7 @@ provide(inherit({
             method : method,
             params : {},
             data   : {
-                action : self.NOT_FOUND
+                action : actions.NOT_FOUND
             }
         };
     },
@@ -129,11 +130,13 @@ provide(inherit({
 
 }, {
 
-    NOT_FOUND : 'not-found',
-
-    NOT_ALLOWED : 'method-not-allowed',
-
     DEFAULT_METHOD : 'GET',
+
+    ACTIONS : {
+        NOT_FOUND   : 'not-found',
+        NOT_ALLOWED : 'not-allowed',
+        INTERNAL_ERROR : 'internal-error'
+    },
 
     STOPS : {
         COMMON : '[^/]+'
