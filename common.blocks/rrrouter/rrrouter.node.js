@@ -3,6 +3,18 @@
 
 modules.define('rrrouter', ['inherit'], function(provide, inherit) {
 
+function clone(obj) {
+    var target = {};
+
+    for(var i in obj) {
+        if(obj.hasOwnProperty(i)) {
+            target[i] = obj[i];
+        }
+    }
+
+    return target;
+}
+
 provide(inherit({
 
     /**
@@ -70,7 +82,7 @@ provide(inherit({
                     path   : url,
                     method : method,
                     params : params,
-                    data   : route.data
+                    data   : clone(route.data)
                 };
             }
         }
