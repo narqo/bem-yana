@@ -10,7 +10,7 @@
             block : 'yana-view',
             elem : 'error',
             mods : {
-                type : ['not-found', 'method-not-allowed', 'internal-error']
+                type : ['not-found', 'not-allowed', 'internal-error']
             }
         }
     ]
