@@ -8,20 +8,13 @@ var routes = [
         }
     },
     {
-        rule : '/alb',
+        rule : '/albums',
         data : {
             action : 'page'
-        },
-        methods : ['post', 'get']
+        }
     },
-    { 
-        rule : '/albums',
-        data : { 
-            action : 'page'
-        } 
-    },
-    { 
-        rule : '/albums/{id:\\d+}', 
+    {
+        rule : '/albums/{id:\\d+}',
         data : {
             action : 'page'
         }
@@ -30,24 +23,6 @@ var routes = [
         rule : '/libs/{lib:bem\\-core}',
         data : {
             action : 'page'
-        }
-    },
-    {
-        rule : '/redirect',
-        data : {
-            action : 'page-redirect'
-        }
-    },
-    {
-        rule : '/leak',
-        data : {
-            action : 'page-error'
-        }
-    },
-    {
-        rule : '/404',
-        data : {
-            action : 'page-404'
         }
     }
 ];
