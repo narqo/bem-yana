@@ -1,8 +1,10 @@
+/* jshint asi:true */
 ({
     mustDeps : [
-        'page'
+        'yana-view'
     ],
     shouldDeps : [
+        'yana-router',
         'yana-logger',
         'vow'
     ]
