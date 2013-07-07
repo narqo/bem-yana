@@ -3,16 +3,15 @@ BEM-YANA
 
 Yet Another Node Application (*yana*) done BEM.
 
-_Please note, that this project is in the early development state_
+## Usage
 
-Usage
------
+See `examples` sub-projects for example usage.
 
-See `examples/silly` project for example usage.
+## Running Examples
 
-### Running Examples
+### "Silly"
 
-To run example project, follow steps described below.
+To run example project ("silly" project in this case), follow steps described below.
 
 First clone `bem-yana` project and install it's dependencies:
 
@@ -22,23 +21,19 @@ First clone `bem-yana` project and install it's dependencies:
 
 Next you should build `examples/silly` project's  with `bem make`:
 
-    › cd examples/silly
-    › ../../node_modules/.bin/bem make
+    › ./node_modules/.bin/bem make -r examples/silly
 
-Now lets run our project:
+Here we are, lets run our project:
 
     › node examples/silly/run
-    Server started on port 3001
+    Server started on port 3014
 
-#### How it works
+## License
 
-**TODO**
+Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)<br/>
+Copyright 2013 Vladimir Varankin &lt;varankinv@yandex-team.ru&gt;
 
-For more usage examples, have a look at [bem-yana-stub](https://github.com/narqo/bem-yana-stub) project.
+## BEM
 
----
-
-BEM is abbreviation for Block-Element-Modifier. It's a way to write code which is easy to support and develop.
-
-For more info about BEM metodology see [bem.info](http://bem.info/).
-
+BEM is abbreviation for Block-Element-Modifier. It's a way to write code which is easy to support and develop.<br/>
+For more info about BEM methodology see [bem.info](http://bem.info/).

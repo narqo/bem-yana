@@ -1,3 +1,9 @@
+0.3.0, 2013-07-08
+-----------------
+
+  - all the code-base was rewritten with [ym](github.com/ymaps/modules) modules system
+  - a lot of bugs were fixed
+  - some examples and benchmarks added
 
 0.2.2, 2013-03-21
 -----------------

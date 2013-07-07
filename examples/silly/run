@@ -1,3 +1,20 @@
-#!/usr/bin/env node
+#!/usr/bin/env sh
 
-require('./silly.bundles/index/_index.node.js').main();
+NPM_BIN=`npm bin`
+NODEMON=$NPM_BIN/nodemon
+
+EXAMPLE_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# **Note** the `.nodemonignore` file is read from the directory you run `nodemon` from,
+# not from the location of the node script you're running.
+cd $EXAMPLE_ROOT
+echo $PWD
+
+WATCH_DIR=$EXAMPLE_ROOT/silly.bundles
+EXTS=node.js
+APP=$EXAMPLE_ROOT/run.js
+
+$NODEMON -e $EXTS -w $WATCH_DIR -d 1 $APP
+
+exit 0
+

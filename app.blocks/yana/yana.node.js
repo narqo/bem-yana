@@ -1,1 +1,0 @@
-var Yana = exports.Yana = {};

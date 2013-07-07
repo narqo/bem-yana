@@ -1,0 +1,4 @@
+.bem/cache
+*.bundles/*/*
+!*.bundles/.bem
+!*.bundles/*/*.bemdecl.js

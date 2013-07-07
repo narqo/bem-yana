@@ -1,0 +1,70 @@
+#!/usr/bin/env sh
+
+examples="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function bench()
+{
+    ab -n 5000 -c 50 -k -q http://127.0.0.1:8081$1 \
+        | grep "Requests per" \
+        | cut -d ' ' -f 7 \
+        | xargs echo "$2:"
+}
+
+node -e "`cat <<EOF
+    require('http').createServer(function(req, res) {
+            res.writeHead(200, {
+                'Content-Type' : 'text/plain',
+                'Content-Length' : 5
+            });
+            res.end('Hello');
+        })
+        .listen(8081);
+    console.log('[%s] Vanilla http-server started at \"http://127.0.0.1:8081\"', new Date());
+EOF`" &
+
+# preventing `kill` to echoing to console about process killing
+disown
+pid=$!
+
+sleep .5
+bench / "Vanilla"
+
+kill -9 $pid
+
+sleep 2
+echo
+
+if [ ! -f "$examples/bench.bundles/sindle/_sindle.node.js" ] || \
+   [ ! -f "$examples/bench.bundles/cluster/_cluster.node.js" ]; then
+    `npm bin`/bem make -r $examples -v warn
+fi
+
+node $examples/bench.bundles/single/_single.node.js &
+
+disown
+pid=$!
+
+sleep .5
+bench /hello "Hello (single)"
+bench /silly "Silly (single)"
+bench /page "Page (single)"
+
+kill -9 $pid
+
+sleep 2
+echo
+
+node $examples/bench.bundles/cluster/_cluster.node.js &
+
+disown
+pid=$!
+
+sleep .5
+bench /hello "Hello (cluster)"
+bench /silly "Silly (cluster)"
+bench /page "Page (cluster)"
+
+kill -9 $pid
+
+exit 0
+

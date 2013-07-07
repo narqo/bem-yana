@@ -1,9 +1,14 @@
-Yana.View.decl('page', {
+modules.define(
+    'yana-view',
+    ['yana-logger'],
+    function(provide, logger, View) {
 
-    _createContext : function() {
+View.decl('page', {
+
+    createContext : function() {
         return {
-            request  : this._req,
-            response : this._res
+            request  : this.req,
+            response : this.res
         };
     },
 
@@ -12,7 +17,7 @@ Yana.View.decl('page', {
      * @returns {String|Buffer}
      */
     render : function(ctx) {
-        Yana.Logger.debug('Page handler is runnig');
+        logger.debug('Page handler is runnig');
 
         var req = ctx.request,
             res = ctx.response,
@@ -24,5 +29,9 @@ Yana.View.decl('page', {
             })
             .join('\n');
     }
+
+});
+
+provide(View);
 
 });
