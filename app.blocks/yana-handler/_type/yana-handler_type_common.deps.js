@@ -3,7 +3,6 @@
         { block : 'yana-handler' }
     ],
     shouldDeps : [
-        { block : 'yana-request' },
         { block : 'yana-router' },
         { block : 'yana-view' },
         {

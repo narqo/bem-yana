@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-handler',
-    ['inherit', 'vow', 'yana-request', 'yana-view', 'yana-router', 'yana-config', 'yana-logger'],
-    function(provide, inherit, Vow, Request, View, router, config, logger, Handler) {
+    ['inherit', 'vow', 'yana-view', 'yana-router', 'yana-logger'],
+    function(provide, inherit, Vow, View, router, logger, Handler) {
 
 provide(inherit(Handler, {
 
