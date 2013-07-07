@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-request',
-    ['vow', 'yana-error', 'yana-error_type_http'],
-    function(provide, Vow, YanaError, HttpError) {
+    ['vow', 'yana-logger', 'yana-error', 'yana-error_type_http'],
+    function(provide, Vow, logger, YanaError, HttpError) {
 
 var HTTP = require('http'),
     URL = require('url'),
@@ -132,12 +132,17 @@ var Request = {
 
 Object.defineProperty(Request, 'body', {
     get : function() {
+        if(!this._rawBody) {
+            logger.debug('Request object is not normalized properly');
+            return {};
+        }
+
         if(this._body) {
             return this._body;
         }
 
         try {
-            var parse = dataParser(Request.parseDataType(this));
+            var parse = dataParser(this.parseDataType());
             this._body = parse(this._rawBody);
         } catch(e) {
             throw new HttpError(400, e.message);
