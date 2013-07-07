@@ -88,8 +88,8 @@ provide(inherit({
         }
 
         Vow.all([this._serverRequest(req), this._serverResponse(res)])
-            .spread(
-                this._rqhandler,
+            .spread(this._rqhandler)
+            .then(
                 this._onStackEnd.bind(this, req, res),
                 this._onError.bind(this, req, res))
             .done();
