@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-http',
-    ['inherit', 'vow', 'yana-config', 'yana-logger', 'yana-util'],
-    function(provide, inherit, Vow, config, logger, util) {
+    ['inherit', 'vow', 'yana-request', 'yana-response', 'yana-config', 'yana-logger', 'yana-util'],
+    function(provide, inherit, Vow, Request, Response, config, logger, util) {
 
 var FS = require('fs'),
     HTTP = require('http'),
@@ -17,8 +17,7 @@ provide(inherit({
 
         this._params = util.extend(this.getDefaultParams(), params);
 
-        this
-            ._loadHandlers()
+        this._loadHandlers()
             ._createServer();
     },
 
@@ -46,45 +45,58 @@ provide(inherit({
     _handlers : [],
 
     _loadHandlers: function() {
-        this._handlers = this._params['handlers'];
+        this._rqhandler = this._stackHandlers(this._params['handlers']);
         return this;
+    },
+
+    _stackHandlers : function(stack) {
+        var proc;
+        return stack.reduce(function(val, Handler) {
+            proc = (new Handler())._run();
+
+            return function(req, res) {
+                // XXX: в Node.js все еще нет нативного способа определить,
+                // что заголовки уже были отправленны
+                if(res._header) {
+                    logger.warning('Responce headers for request "%s" were sent already', req.url);
+                    return;
+                }
+
+                if(res.finished) {
+                    // FIXME: do something usefull?
+                    logger.warning('Response for "%s" was finished before all the handlers processed!', req.url);
+                    return;
+                }
+
+                // FIXME: в Node.js<0.10 события `data` и `end` эмитятся на первом event-loop'е,
+                // поэтому завернуть обрабоку первого хендлера в промис, нельзя :(
+                return val === null?
+                    proc(req, res) :
+                    Vow.when(val, function() {
+                        return proc(req, res);
+                    });
+            };
+        }, null);
     },
 
     _onRequest : function(req, res) {
         logger.debug('\nRequest for "%s" received', req.url);
 
-        if(!this._handlers.length) {
+        if(typeof this._rqhandler !== 'function') {
             logger.warning('No request handlers registered. Exiting');
             return this._onStackEnd(req, res);
         }
 
-        var proc,
-            hResultsP = this._handlers.reduce(function(val, handler) {
-                proc = (new handler())._run();
-                // FIXME: Обработчик POST-запроса срабатывает только на первый tick,
-                // поэтому первый handler нельзя завернуть в promise (node<=0.8)
-                return val === null?
-                        Vow.promise(proc(req, res)) :
-                        Vow.when(val, function() {
-                            if(res.finished) {
-                                // FIXME: do something usefull?
-                                logger.warning('Response for "%s" was finished before all the handlers processed!', req.url);
-                                return;
-                            }
-
-                            return proc(req, res);
-                        });
-        }, null);
-
-        hResultsP
-            .then(
+        Vow.all([this._serverRequest(req), this._serverResponse(res)])
+            .spread(
+                this._rqhandler,
                 this._onStackEnd.bind(this, req, res),
                 this._onError.bind(this, req, res))
             .done();
     },
 
     _onError : function(req, res, err) {
-        logger.error('Error cached for "%s", %s.', req.url, err.message, err.stack || '');
+        logger.error('Error catched for "%s", %s.', req.url, err.message, err.stack || '');
 
         var code = err.code || 500;
 
@@ -125,14 +137,36 @@ provide(inherit({
         });
     },
 
+    _serverRequest : function(req) {
+        /* jshint proto:true */
+        req.__proto__ = Request;
+        return Vow.all([
+                req.parseUrl(),
+                req.parseArgs(),
+                req.parseCookies(),
+                req.parseBody()
+            ])
+            .then(function() {
+                return req;
+            });
+    },
+
+    _serverResponse : function(res) {
+        /* jshint proto:true */
+        res.__proto__ = Response;
+        return res;
+    },
+
     _createServer : function() {
         if(this._server) {
             logger.warning('It seems that server was already created. Returning');
             return this;
         }
 
-        var server = this._server = HTTP.createServer(this._onRequest.bind(this));
-        server.on('close', this._onClose.bind(this));
+        var server = this._server = HTTP.createServer();
+
+        server.on('request', this._onRequest.bind(this));
+        server.once('close', this._onClose.bind(this));
 
         return this;
     },

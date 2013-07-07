@@ -1,17 +1,15 @@
 /* jshint node:true */
 /* global modules:false */
 
-(function() {
-
-var http = require('http'),
-    url = require('url'),
-    qs = require('querystring'),
-    cookie = require('cookie');
-
 modules.define(
     'yana-request',
-    ['inherit', 'vow', 'yana-error', 'yana-error_type_http'],
-    function(provide, inherit, Vow, YanaError, HttpError) {
+    ['vow', 'yana-logger', 'yana-error', 'yana-error_type_http'],
+    function(provide, Vow, logger, YanaError, HttpError) {
+
+var HTTP = require('http'),
+    URL = require('url'),
+    QS = require('querystring'),
+    COOKIE = require('cookie');
 
 function nopParser(data) {
     return data;
@@ -39,7 +37,7 @@ function dataParser(type) {
         return jsonParser;
 
     case 'text':
-        return qs.parse;
+        return QS.parse;
 
     default:
         return nopParser;
@@ -47,113 +45,62 @@ function dataParser(type) {
     }
 }
 
-provide(inherit(http.IncomingMessage, {
+var Request = {
 
-    /**
-     * @constructor
-     * @returns {Promise * Request}
-     */
-    __constructor : function(req) {
-        /* jshint proto:true */
-        req.__proto__ = this;
-        return req._normalize();
-    },
+    /* jshint proto:true */
+    __proto__ : HTTP.IncomingMessage.prototype,
 
-    _normalize : function() {
-        if(this._normalized) {
-            return Vow.promise(this);
+    parseUrl : function() {
+        if(this._parsed) {
+            return this._parsed;
         }
 
-        var _self = this.__self;
+        this._parsed = URL.parse(this.url);
+        this.path = this._parsed.pathname;
 
-        return _self.parseBody(this)
-            .then(function(data) {
-
-                this._bodyParser = dataParser(_self.parseDataType(this));
-                this._rawBody = data;
-
-                Object.defineProperty(this, 'body', {
-                    'get' : function() {
-                        if(this._body) {
-                            return this._body;
-                        }
-
-                        try {
-                            this._body = this._bodyParser(this._rawBody);
-                        } catch(e) {
-                            throw new HttpError(400, e.message);
-                        }
-
-                        return this._body;
-                    },
-
-                    'set' : function() {
-                        return this._rawBody;
-                    }
-                });
-
-                _self.parseUrl(this);
-                _self.parseArgs(this);
-                _self.parseCookies(this);
-
-                this._normalized = true;
-
-                return this;
-            }, this);
-    }
-
-}, {
-
-    parseUrl : function(req) {
-        if(req._parsed) {
-            return req._parsed;
-        }
-
-        req._parsed = url.parse(req.url);
-        req.path = req._parsed.pathname;
-
-        return req._parsed;
+        return this._parsed;
     },
 
-    parseArgs : function(req) {
-        return req.query ||
-            (req.query = req.url.indexOf('?') === -1?
-                {} : qs.parse(this.parseUrl(req).query));
+    parseArgs : function() {
+        return this.query ||
+            (this.query = this.url.indexOf('?') === -1?
+                {} : QS.parse(this.parseUrl().query));
     },
 
-    parseCookies : function(req) {
-        if(req.cookies) {
-            return req.cookies;
+    parseCookies : function() {
+        if(this.cookies) {
+            return this.cookies;
         }
 
-        req.cookies = {};
+        this.cookies = {};
 
-        var cookies = req.headers.cookie;
+        var cookies = this.headers.cookie;
         if(cookies) {
-            req.cookies = cookie.parse(cookies);
+            this.cookies = COOKIE.parse(cookies);
         }
 
-        return req.cookies;
+        return this.cookies;
     },
 
-    parseMime : function(req) {
-        var ct = req.headers['content-type'] || '';
+    parseMime : function() {
+        var ct = this.headers['content-type'] || '';
         return ct.split(';')[0];
     },
 
-    parseDataType : function(req) {
-        var mime = this.parseMime(req);
+    parseDataType : function() {
+        var mime = this.parseMime();
         if('application/json' === mime) {
             return 'json';
         }
         return 'text';
     },
 
-    parseBody : function(req) {
+    parseBody : function() {
         var promise = Vow.promise(),
+            req = this,
             body = {};
 
-        if(req.method === 'POST' && this.hasBody(req)) {
+        if(req.method === 'POST' && this.hasBody()) {
             var buf = '';
 
             req.setEncoding('utf8');
@@ -163,26 +110,52 @@ provide(inherit(http.IncomingMessage, {
                     buf += chunk;
                 })
                 .once('end', function() {
-                    promise.fulfill(buf);
+                    promise.fulfill(req._rawBody = buf);
                 })
                 .once('close', function() {
                     promise.reject(new HttpError(500, 'connection closed'));
                 });
         } else {
-            promise.fulfill(body);
+            promise.fulfill(req._rawBody = body);
         }
 
         return promise;
     },
 
-    hasBody : function(req) {
-        return req.method === 'PUT' ||
-            req.headers.hasOwnProperty('transfer-encoding') ||
-            req.headers.hasOwnProperty('content-length');
+    hasBody : function() {
+        return this.method === 'PUT' ||
+            this.headers.hasOwnProperty('transfer-encoding') ||
+            this.headers['content-length'] !== '0';
     }
 
-}));
+};
 
+Object.defineProperty(Request, 'body', {
+    get : function() {
+        if(!this._rawBody) {
+            logger.debug('Request object is not normalized properly');
+            return {};
+        }
+
+        if(this._body) {
+            return this._body;
+        }
+
+        try {
+            var parse = dataParser(this.parseDataType());
+            this._body = parse(this._rawBody);
+        } catch(e) {
+            throw new HttpError(400, e.message);
+        }
+
+        return this._body;
+    },
+
+    set : function() {
+        return this._rawBody;
+    }
 });
 
-}());
+provide(Request);
+
+});

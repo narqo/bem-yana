@@ -5,6 +5,8 @@
     ],
     shouldDeps : [
         { block : 'yana-config' },
+        { block : 'yana-request' },
+        { block : 'yana-response' },
         {
             block : 'yana-handler',
             mods : { 'type' : 'common' }
