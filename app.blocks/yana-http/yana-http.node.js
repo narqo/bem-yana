@@ -55,6 +55,8 @@ provide(inherit({
             proc = (new Handler())._run();
 
             return function(req, res) {
+                logger.debug('Handeling request "%s"', req.url);
+
                 // XXX: в Node.js все еще нет нативного способа определить,
                 // что заголовки уже были отправленны
                 if(res._header) {
