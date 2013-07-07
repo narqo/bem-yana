@@ -5,6 +5,11 @@
   - a lot of bugs were fixed
   - some examples and benchmarks added
 
+0.2.2, 2013-03-21
+-----------------
+
+  - bug fixed
+
 0.2.1, 2013-03-21
 -----------------
 
