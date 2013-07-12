@@ -1,3 +1,3 @@
-if(typeof vow === 'undefined') {
-    require('vow');
+if(typeof Vow === 'undefined') {
+    Vow = require('vow');
 }
