@@ -43,7 +43,8 @@ var View = inherit({
                 this._getName(), this.path);
 
         var ctx = this.createContext();
-        return Vow.when(this.render(ctx), this._onCompleted, this);
+        return Vow.invoke(this.render.bind(this), ctx)
+            .then(this._onCompleted, this);
     },
 
     _onCompleted : function(result) {
@@ -94,7 +95,7 @@ var View = inherit({
                     util.format('No base view "%s" registered for view "%s"', base, decl.name));
         }
 
-        base = views[base] || views['yana-view'] || View;
+        base = views[base || decl.name] || views['yana-view'] || this;
 
         (views[decl.name] = inherit(base, props, staticProps))._name = decl.name;
 
@@ -110,13 +111,15 @@ var View = inherit({
 
 });
 
-provide(View.decl('yana-view', {
+View.decl('yana-view', {
 
     render : function() {
         logger.debug('Rendering request');
         return 'Done!';
     }
 
-}));
+});
+
+provide(View);
 
 });
