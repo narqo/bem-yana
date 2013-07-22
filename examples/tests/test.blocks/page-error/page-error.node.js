@@ -13,7 +13,7 @@ View.decl({ name : 'page-error' }, {
 
     render : function() {
         logger.info('"%s" view should result with proper error handler', this._getName());
-        return Vow.reject(new Error('Something happened!'));
+        throw new Error('[throw] Something happened!');
     }
 
 });
