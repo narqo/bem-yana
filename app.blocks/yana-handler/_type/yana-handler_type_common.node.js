@@ -3,8 +3,8 @@
 
 modules.define(
     'yana-handler',
-    ['inherit', 'vow', 'yana-view', 'yana-router', 'yana-logger'],
-    function(provide, inherit, Vow, View, router, logger, Handler) {
+    ['inherit', 'vow', 'yana-view', 'yana-router', 'yana-logger', 'yana-error'],
+    function(provide, inherit, Vow, View, router, logger, YanaError, Handler) {
 
 provide(inherit(Handler, {
 
@@ -19,8 +19,13 @@ provide(inherit(Handler, {
 
         logger.debug('Route dispatched %j', route);
 
-        return Vow.when(this.handleRequest(req, res, route))
+        return Vow.invoke(this.handleRequest.bind(this), req, res, route)
             .fail(function(err) {
+                // FIXME: ugly!
+                if(err instanceof YanaError) {
+                    throw err;
+                }
+
                 var fallback = router.__self.ACTIONS.INTERNAL_ERROR;
 
                 logger.warning('Error catched, going to fallback \\w "%s"', fallback);

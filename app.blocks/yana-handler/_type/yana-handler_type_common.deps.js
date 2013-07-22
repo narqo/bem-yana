@@ -4,6 +4,7 @@
     ],
     shouldDeps : [
         { block : 'yana-router' },
+        { block : 'yana-error' },
         { block : 'yana-view' },
         {
             block : 'yana-view',
