@@ -1,3 +1,9 @@
+0.3.2, 2013-07-22
+-----------------
+
+  - view's inheritance fixed
+  - yana-handler: error-handler fallback fixed to work properly with errors throwen in views
+
 0.3.1, 2013-07-12
 -----------------
 
@@ -6,7 +12,7 @@
 0.3.0, 2013-07-08
 -----------------
 
-  - all the code-base was rewritten with [ym](github.com/ymaps/modules) modules system
+  - all of the code-base was rewritten with [ym](github.com/ymaps/modules) modules system
   - a lot of bugs were fixed
   - some examples and benchmarks added
 
