@@ -41,7 +41,7 @@ provide(inherit(Handler, {
         var action = route.data.action;
         req.route = route;
 
-        return View.create(action, req, res, route.path, route.params)._run();
+        return View.create(action, req, res, route.path, route.params)._run(route.data);
     }
 
 }));

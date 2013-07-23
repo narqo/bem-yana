@@ -30,7 +30,7 @@ var View = inherit({
         this.params = util.extend(this.getDefaultParams(), params);
     },
 
-    createContext : function() {},
+    createContext : function(data) {},
 
     render : function(ctx) {},
 
@@ -38,11 +38,11 @@ var View = inherit({
         return this.__self.getName();
     },
 
-    _run : function() {
+    _run : function(data) {
         logger.debug('Page for action: "%s", path: "%s" running',
                 this._getName(), this.path);
 
-        var ctx = this.createContext();
+        var ctx = this.createContext(data);
         return Vow.invoke(this.render.bind(this), ctx)
             .then(this._onCompleted, this);
     },
@@ -102,11 +102,20 @@ var View = inherit({
         return this;
     },
 
+    /**
+     * @param {String} name
+     * @param {http#ServerRequest} req
+     * @param {http#ServerResponse} res
+     * @param {String} path
+     * @param {Any} params
+     * @param {Any} [...opts]
+     * @returns {View}
+     */
     create : function(name, req, res, path, params) {
         if(!views[name]) {
             throw new ViewError('View is not registered "' + name + '"');
         }
-        return new views[name](req, res, path, params);
+        return new (Function.prototype.bind.apply(views[name], arguments));
     }
 
 });
