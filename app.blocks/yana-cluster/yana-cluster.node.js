@@ -88,7 +88,7 @@ provide(inherit({
                 return Date.now() - this.birth;
             },
             enumerable : true,
-            configurable: true
+            configurable : true
         });
 
         workers[worker.id].forkTimer = setTimeout(function() {
@@ -131,7 +131,7 @@ provide(inherit({
         workers[id].disconnectTimer = setTimeout(function() {
             logger.debug('Closing down');
             worker.process.kill('SIGKILL');
-        }, this._params.disconnectTimeout)
+        }, this._params.disconnectTimeout);
     },
 
     _onWorkerDeath : function(worker) {
