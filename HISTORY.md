@@ -1,3 +1,9 @@
+0.3.3, 2013-07-23
+-----------------
+
+  - yana-view: context might be created from routing's `data`
+  - other minor refactoring
+
 0.3.2, 2013-07-22
 -----------------
 
