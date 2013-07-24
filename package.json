@@ -18,7 +18,8 @@
   },
   "devDependencies": {
     "bem": "~0.6.10",
-    "nodemon": "~0.7.8"
+    "nodemon": "~0.7.8",
+    "node-inspector": "~0.3.2"
   },
   "author": "Vladimir Varankin <varankinv@yandex-team.ru> (http://github.com/narqo)",
   "readmeFilename": "README.md",
