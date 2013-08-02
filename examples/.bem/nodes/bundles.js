@@ -1,8 +1,8 @@
 var PATH = require('path'),
-    registry = require('bem/lib/nodesregistry'),
-
     join = PATH.join,
     resolve = PATH.resolve.bind(null, __dirname);
+
+module.exports = function(registry) {
 
 registry.decl('BundleNode', {
 
@@ -26,3 +26,5 @@ registry.decl('BundleNode', {
     }
 
 });
+
+}

@@ -1,2 +1,2 @@
-require('../../../.bem/nodes');
-require('../../.bem/nodes');
+require('../../../.bem/nodes').extendMake(MAKE);
+require('../../.bem/nodes').extendMake(MAKE);

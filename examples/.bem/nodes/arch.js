@@ -1,7 +1,9 @@
-var registry = require('bem/lib/nodesregistry');
+module.exports = function(registry) {
 
 registry.decl('Arch', {
 
     bundlesLevelsRegexp : /^.+?\.bundles$/
 
 });
+
+};
