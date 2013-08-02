@@ -1,7 +1,11 @@
-require('bem/lib/nodesregistry').decl('BundleNode', {
+module.exports = function(registry) {
 
-    'create-node.js-optimizer-node' : function(tech, sourceNode, bundleNode) {
-        return this['create-js-optimizer-node'].apply(this, arguments);
-    }
+    registry.decl('BundleNode', {
 
-});
+        'create-node.js-optimizer-node' : function(tech, sourceNode, bundleNode) {
+            return this['create-js-optimizer-node'].apply(this, arguments);
+        }
+
+    });
+
+};

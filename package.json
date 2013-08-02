@@ -14,7 +14,8 @@
     "inherit": "~1.0.4",
     "cookie": "~0.0.5",
     "ym": "~0.0.1",
-    "log": "~1.4.0"
+    "log": "~1.4.0",
+    "bem-environ": "~1.2.0"
   },
   "devDependencies": {
     "bem": "~0.6.10",

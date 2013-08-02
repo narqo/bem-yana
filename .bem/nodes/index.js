@@ -1,2 +1,3 @@
-require('./arch');
-require('./bundle');
+exports.extendMake = function(registry) {
+    require('./bundle')(registry);
+};
