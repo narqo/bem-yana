@@ -1,12 +1,14 @@
 /*global MAKE:true */
 
-require('./nodes');
+var environ = require('bem-environ')(__dirname),
+    nodes = require('./nodes');
 
+environ.extendMake(MAKE);
+nodes.extendMake(MAKE);
 
 MAKE.decl('Arch', {
 
     blocksLevelsRegexp : /^.+?\.blocks$/,
-
     bundlesLevelsRegexp : /^.+?\.bundles$/
 
 });
