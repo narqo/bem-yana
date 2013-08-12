@@ -1,3 +1,13 @@
+0.3.5, 2013-08-12
+-----------------
+
+  - yana-request: Body parser should always returns String as `rawBody`
+
+0.3.4, 2013-08-03
+-----------------
+
+  - some minors
+
 0.3.3, 2013-07-23
 -----------------
 
