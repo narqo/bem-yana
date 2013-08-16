@@ -1,3 +1,9 @@
+0.3.6, 2013-08-16
+-----------------
+
+  - yana-request: Fix rawBody initial value
+  - yana-logger: "transport" param renamed to "file"
+
 0.3.5, 2013-08-12
 -----------------
 
