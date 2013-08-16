@@ -98,7 +98,7 @@ var Request = {
     parseBody : function() {
         var promise = Vow.promise(),
             req = this,
-            body = '{}';
+            body = '';
 
         if(req.method === 'POST' && this.hasBody()) {
             var buf = '';
