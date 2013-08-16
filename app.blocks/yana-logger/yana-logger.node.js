@@ -3,12 +3,18 @@
 
 modules.define(
     'yana-logger',
-    ['yana-util', 'yana-config'],
-    function(provide, util, config) {
+    ['yana-config'],
+    function(provide, config) {
 
-var Log = require('log'),
-    cfg = config.logger;
+var FS = require('fs'),
+    Log = require('log'),
+    cfg = config.logger,
+    transport = cfg.file;
 
-provide(new Log(cfg.level, cfg.transport));
+if(typeof transport === 'string') {
+    transport = FS.createWriteStream(transport, { flags : 'a' });
+}
+
+provide(new Log(cfg.level, transport));
 
 });
