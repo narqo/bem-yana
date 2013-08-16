@@ -17,7 +17,7 @@ provide(util.extend(config, {
 
     logger : {
         level : 'debug'
-//        transport : FS.createWriteStream(__dirname + '/../../node.log', { flags : 'a' })
+//        file : FS.createWriteStream(__dirname + '/../../node.log', { flags : 'a' })
     }
 
 }));

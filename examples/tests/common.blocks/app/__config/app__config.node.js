@@ -8,6 +8,8 @@ var workers = require('os').cpus().length - 2;
 config.app.port = 8081;
 config.app.workers = workers < 1? 1 : workers;
 
+config.logger.level = 'debug';
+
 provide(config);
 
 });
