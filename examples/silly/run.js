@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-require('./silly.bundles/index/_index.node.js');
+require('./silly.bundles/index/index.node.js');

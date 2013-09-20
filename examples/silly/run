@@ -4,17 +4,21 @@ NPM_BIN=`npm bin`
 NODEMON=$NPM_BIN/nodemon
 
 EXAMPLE_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=$( dirname $( dirname $EXAMPLE_ROOT ) )
 
 # **Note** the `.nodemonignore` file is read from the directory you run `nodemon` from,
 # not from the location of the node script you're running.
 cd $EXAMPLE_ROOT
-echo $PWD
+#echo $PWD
 
-WATCH_DIR=$EXAMPLE_ROOT/silly.bundles
 EXTS=node.js
 APP=$EXAMPLE_ROOT/run.js
 
-$NODEMON -e $EXTS -w $WATCH_DIR -d 1 $APP
+$NODEMON \
+    -w $ROOT/common.blocks \
+    -w $ROOT/app.blocks \
+    -w $EXAMPLE_ROOT/common.blocks \
+    -e $EXTS -d 1 $APP
 
 exit 0
 
