@@ -1,3 +1,9 @@
+0.4.0, 2013-09-21
+-----------------
+
+  - [build] "node.js" tech uses `require()` for modules inclusion
+    instead of `/* borschik:include */` (bem/bem-tools#352 workaround)
+
 0.3.6, 2013-08-16
 -----------------
 
