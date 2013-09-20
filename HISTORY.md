@@ -1,6 +1,7 @@
 0.4.0, 2013-09-21
 -----------------
 
+  - [build] "node.js" tech uses "v2/js" as prototype
   - [build] "node.js" tech uses `require()` for modules inclusion
     instead of `/* borschik:include */` (bem/bem-tools#352 workaround)
 
