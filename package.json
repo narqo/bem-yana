@@ -1,7 +1,7 @@
 {
   "name": "bem-yana",
   "description": "Yet Another Node Application done BEM",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/narqo/bem-yana.git"
@@ -18,8 +18,8 @@
     "bem-environ": "~1.2.0"
   },
   "devDependencies": {
-    "bem": "~0.6.10",
-    "nodemon": "~0.7.8",
+    "bem": "~0.6.16",
+    "nodemon": "~0.7.19",
     "node-inspector": "~0.3.2"
   },
   "author": "Vladimir Varankin <varankinv@yandex-team.ru> (http://github.com/narqo)",
