@@ -1,5 +1,4 @@
-exports.API_VER = 2;
-exports.baseTechName = 'js';
+exports.baseTechName = 'v2/js';
 exports.techMixin = {
 
     getSuffixes : function() {
